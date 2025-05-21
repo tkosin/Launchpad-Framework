@@ -1,0 +1,216 @@
+"use client"
+
+import type React from "react"
+
+import { useState } from "react"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faXmark, faUpload } from "@fortawesome/free-solid-svg-icons"
+import Image from "next/image"
+
+interface AvatarChangeModalProps {
+  isOpen: boolean
+  onClose: () => void
+  onAvatarChange: (avatarUrl: string) => void
+  currentAvatar: string
+  language: "en" | "th"
+  t: (key: string) => string
+}
+
+export function AvatarChangeModal({
+  isOpen,
+  onClose,
+  onAvatarChange,
+  currentAvatar,
+  language,
+  t,
+}: AvatarChangeModalProps) {
+  const [selectedAvatar, setSelectedAvatar] = useState<string | null>(null)
+  const [isUploading, setIsUploading] = useState(false)
+  const [activeTab, setActiveTab] = useState<"people" | "dinosaurs">("people")
+
+  // Predefined avatars - People
+  const peopleAvatars = [
+    "/avatars/avatar-1.png",
+    "/avatars/avatar-2.png",
+    "/avatars/avatar-3.png",
+    "/avatars/avatar-4.png",
+    "/avatars/avatar-5.png",
+    "/avatars/avatar-6.png",
+  ]
+
+  // Predefined avatars - Dinosaurs
+  const dinosaurAvatars = [
+    "/avatars/dino-1.png",
+    "/avatars/dino-2.png",
+    "/avatars/dino-3.png",
+    "/avatars/dino-4.png",
+    "/avatars/dino-5.png",
+    "/avatars/dino-6.png",
+    "/avatars/dino-7.png",
+    "/avatars/dino-8.png",
+  ]
+
+  const handleAvatarSelect = (avatar: string) => {
+    setSelectedAvatar(avatar)
+  }
+
+  const handleSave = () => {
+    if (selectedAvatar) {
+      onAvatarChange(selectedAvatar)
+      onClose()
+    }
+  }
+
+  const simulateUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+
+    setIsUploading(true)
+
+    // Simulate file upload
+    setTimeout(() => {
+      // In a real app, you would upload the file to a server
+      // and get back a URL. Here we're just using a placeholder.
+      setSelectedAvatar("/avatars/custom-avatar.png")
+      setIsUploading(false)
+    }, 1500)
+  }
+
+  if (!isOpen) return null
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center">
+      <div className="fixed inset-0 bg-black/50" onClick={onClose} />
+
+      <div
+        className={`relative bg-white rounded-lg shadow-xl w-full max-w-md mx-4 animate-in fade-in zoom-in-95 ${
+          language === "en" ? "font-en" : "font-th"
+        }`}
+      >
+        <div className="flex items-center justify-between p-4 border-b">
+          <h2 className="text-lg font-medium">{t("changeAvatar")}</h2>
+          <button onClick={onClose} className="p-1 rounded-full hover:bg-gray-100">
+            <FontAwesomeIcon icon={faXmark} className="h-5 w-5" />
+          </button>
+        </div>
+
+        <div className="p-4">
+          <div className="flex justify-center mb-6">
+            <div className="relative w-24 h-24 rounded-full overflow-hidden border-4 border-white shadow-lg">
+              <Image src={selectedAvatar || currentAvatar} alt="Current avatar" fill className="object-cover" />
+            </div>
+          </div>
+
+          <div className="mb-6">
+            <div className="flex border-b border-gray-200 mb-4">
+              <button
+                className={`px-4 py-2 text-sm font-medium ${
+                  activeTab === "people"
+                    ? "text-facgure-blue border-b-2 border-facgure-blue"
+                    : "text-gray-500 hover:text-gray-700"
+                }`}
+                onClick={() => setActiveTab("people")}
+              >
+                {language === "en" ? "People" : "บุคคล"}
+              </button>
+              <button
+                className={`px-4 py-2 text-sm font-medium ${
+                  activeTab === "dinosaurs"
+                    ? "text-facgure-blue border-b-2 border-facgure-blue"
+                    : "text-gray-500 hover:text-gray-700"
+                }`}
+                onClick={() => setActiveTab("dinosaurs")}
+              >
+                {language === "en" ? "Dinosaurs" : "ไดโนเสาร์"}
+              </button>
+            </div>
+
+            <p className="text-sm text-gray-500 mb-3">
+              {language === "en" ? "Choose from predefined avatars:" : "เลือกจากอวาตาร์ที่กำหนดไว้:"}
+            </p>
+
+            {activeTab === "people" ? (
+              <div className="grid grid-cols-3 gap-4">
+                {peopleAvatars.map((avatar, index) => (
+                  <button
+                    key={index}
+                    className={`relative w-20 h-20 rounded-full overflow-hidden border-4 transition-all ${
+                      selectedAvatar === avatar
+                        ? "border-facgure-blue scale-110 shadow-lg"
+                        : "border-white hover:border-gray-200"
+                    }`}
+                    onClick={() => handleAvatarSelect(avatar)}
+                  >
+                    <Image
+                      src={avatar || "/placeholder.svg"}
+                      alt={`Avatar option ${index + 1}`}
+                      fill
+                      className="object-cover"
+                    />
+                  </button>
+                ))}
+              </div>
+            ) : (
+              <div className="grid grid-cols-4 gap-3">
+                {dinosaurAvatars.map((avatar, index) => (
+                  <button
+                    key={index}
+                    className={`relative w-16 h-16 rounded-full overflow-hidden border-4 transition-all ${
+                      selectedAvatar === avatar
+                        ? "border-facgure-blue scale-110 shadow-lg"
+                        : "border-white hover:border-gray-200"
+                    }`}
+                    onClick={() => handleAvatarSelect(avatar)}
+                  >
+                    <Image
+                      src={avatar || "/placeholder.svg"}
+                      alt={`Dinosaur avatar option ${index + 1}`}
+                      fill
+                      className="object-cover"
+                    />
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+
+          <div className="mb-6">
+            <p className="text-sm text-gray-500 mb-3">
+              {language === "en" ? "Or upload your own:" : "หรืออัปโหลดของคุณเอง:"}
+            </p>
+            <label className="flex items-center justify-center gap-2 p-3 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors">
+              {isUploading ? (
+                <div className="flex items-center gap-2">
+                  <div className="h-5 w-5 border-2 border-facgure-blue border-t-transparent rounded-full animate-spin" />
+                  <span>{language === "en" ? "Uploading..." : "กำลังอัปโหลด..."}</span>
+                </div>
+              ) : (
+                <>
+                  <FontAwesomeIcon icon={faUpload} className="h-5 w-5 text-gray-500" />
+                  <span className="text-gray-700">{language === "en" ? "Upload image" : "อัปโหลดรูปภาพ"}</span>
+                  <input type="file" className="hidden" accept="image/*" onChange={simulateUpload} />
+                </>
+              )}
+            </label>
+          </div>
+
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={onClose}
+              className="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
+            >
+              {t("cancel")}
+            </button>
+            <button
+              onClick={handleSave}
+              disabled={!selectedAvatar || isUploading}
+              className="px-4 py-2 bg-facgure-blue text-white rounded-md hover:bg-opacity-90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {language === "en" ? "Save Changes" : "บันทึกการเปลี่ยนแปลง"}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
