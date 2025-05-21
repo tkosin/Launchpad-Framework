@@ -155,6 +155,39 @@ const translations: TranslationsType = {
     en: "days ago",
     th: "วันที่แล้ว",
   },
+  // Toast notifications
+  appInstalled: {
+    en: "App Installed",
+    th: "ติดตั้งแอปแล้ว",
+  },
+  appInstalledMessage: {
+    en: "has been added to your workspace",
+    th: "ถูกเพิ่มเข้าไปในพื้นที่ทำงานของคุณแล้ว",
+  },
+  appRemoved: {
+    en: "App Removed",
+    th: "ลบแอปแล้ว",
+  },
+  appRemovedMessage: {
+    en: "has been removed from your workspace",
+    th: "ถูกลบออกจากพื้นที่ทำงานของคุณแล้ว",
+  },
+  notificationsCleared: {
+    en: "Notifications Cleared",
+    th: "ล้างการแจ้งเตือนแล้ว",
+  },
+  notificationsClearedMessage: {
+    en: "All notifications have been cleared",
+    th: "การแจ้งเตือนทั้งหมดถูกล้างแล้ว",
+  },
+  avatarUpdated: {
+    en: "Avatar Updated",
+    th: "อัปเดตอวาตาร์แล้ว",
+  },
+  avatarUpdatedMessage: {
+    en: "Your profile picture has been updated",
+    th: "รูปโปรไฟล์ของคุณได้รับการอัปเดตแล้ว",
+  },
   // Add more translations as needed
 }
 

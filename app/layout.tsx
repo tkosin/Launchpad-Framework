@@ -4,6 +4,7 @@ import "./globals.css"
 import { config } from "@fortawesome/fontawesome-svg-core"
 import "@fortawesome/fontawesome-svg-core/styles.css"
 import { LanguageProvider } from "@/contexts/language-context"
+import { ToastProvider } from "@/contexts/toast-context"
 
 // Prevent Font Awesome from adding its CSS since we did it manually above
 config.autoAddCss = false
@@ -28,7 +29,9 @@ export default function RootLayout({
         />
       </head>
       <body>
-        <LanguageProvider>{children}</LanguageProvider>
+        <LanguageProvider>
+          <ToastProvider>{children}</ToastProvider>
+        </LanguageProvider>
       </body>
     </html>
   )

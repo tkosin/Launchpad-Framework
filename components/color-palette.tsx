@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faPalette, faCheck } from "@fortawesome/free-solid-svg-icons"
 
@@ -14,6 +14,45 @@ interface ColorPaletteProps {
 export function ColorPalette({ currentColor, onColorChange, language, t }: ColorPaletteProps) {
   const [expanded, setExpanded] = useState(false)
   const [selectedColor, setSelectedColor] = useState(currentColor)
+  const [isMobile, setIsMobile] = useState(false)
+  const dropdownRef = useRef<HTMLDivElement>(null)
+
+  // Check if device is mobile
+  useEffect(() => {
+    const checkIfMobile = () => {
+      setIsMobile(window.innerWidth < 640)
+    }
+
+    // Initial check
+    checkIfMobile()
+
+    // Add event listener for window resize
+    window.addEventListener("resize", checkIfMobile)
+
+    // Cleanup
+    return () => window.removeEventListener("resize", checkIfMobile)
+  }, [])
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setExpanded(false)
+      }
+    }
+
+    if (expanded) {
+      document.addEventListener("mousedown", handleClickOutside)
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside)
+    }
+  }, [expanded])
+
+  useEffect(() => {
+    setSelectedColor(currentColor)
+  }, [currentColor])
 
   // Beautiful color palette options with default Facgure blue at the beginning
   const colorOptions = [
@@ -35,10 +74,6 @@ export function ColorPalette({ currentColor, onColorChange, language, t }: Color
     { name: "Sunset", value: "#ff6d00", textColor: "white" },
   ]
 
-  useEffect(() => {
-    setSelectedColor(currentColor)
-  }, [currentColor])
-
   const handleColorSelect = (color: string) => {
     setSelectedColor(color)
     onColorChange(color)
@@ -46,7 +81,7 @@ export function ColorPalette({ currentColor, onColorChange, language, t }: Color
   }
 
   return (
-    <div className="relative">
+    <div className="relative" ref={dropdownRef}>
       <button
         onClick={() => setExpanded(!expanded)}
         className="w-full text-left px-4 py-3 text-sm text-gray-700 hover:bg-gray-100 rounded-md flex items-center gap-2"
@@ -62,7 +97,11 @@ export function ColorPalette({ currentColor, onColorChange, language, t }: Color
       </button>
 
       {expanded && (
-        <div className="absolute z-10 mt-2 p-4 bg-white rounded-lg shadow-xl border border-gray-200 w-72 right-0 animate-in fade-in zoom-in-95 duration-200">
+        <div
+          className={`absolute z-10 mt-2 p-4 bg-white rounded-lg shadow-xl border border-gray-200 ${
+            isMobile ? "w-[calc(100vw-2rem)] left-1/2 -translate-x-1/2" : "w-72 right-0"
+          } animate-in fade-in zoom-in-95 duration-200`}
+        >
           <div className="mb-3">
             <h3 className="font-medium text-sm mb-2">{language === "en" ? "Select a theme color" : "เลือกสีธีม"}</h3>
             <p className="text-xs text-gray-500">
@@ -70,7 +109,7 @@ export function ColorPalette({ currentColor, onColorChange, language, t }: Color
             </p>
           </div>
 
-          <div className="grid grid-cols-5 gap-2">
+          <div className="grid grid-cols-4 sm:grid-cols-5 gap-2">
             {colorOptions.map((color) => (
               <button
                 key={color.value}
@@ -79,7 +118,7 @@ export function ColorPalette({ currentColor, onColorChange, language, t }: Color
                 title={color.name}
               >
                 <div
-                  className={`w-10 h-10 rounded-md transition-all duration-200 ${
+                  className={`aspect-square rounded-md transition-all duration-200 ${
                     selectedColor === color.value
                       ? "ring-2 ring-offset-2 ring-facgure-blue scale-110"
                       : "hover:scale-110 hover:shadow-md"
@@ -88,11 +127,11 @@ export function ColorPalette({ currentColor, onColorChange, language, t }: Color
                 >
                   {selectedColor === color.value && (
                     <div className="absolute inset-0 flex items-center justify-center">
-                      <FontAwesomeIcon className={`w-5 h-5 text-${color.textColor}`} icon={faCheck} />
+                      <FontAwesomeIcon className={`w-4 h-4 text-${color.textColor}`} icon={faCheck} />
                     </div>
                   )}
                 </div>
-                <span className="absolute opacity-0 group-hover:opacity-100 bg-gray-900 text-white text-xs rounded py-1 px-2 -bottom-8 left-1/2 transform -translate-x-1/2 transition-opacity duration-200 whitespace-nowrap">
+                <span className="absolute opacity-0 group-hover:opacity-100 bg-gray-900 text-white text-xs rounded py-1 px-2 -bottom-8 left-1/2 transform -translate-x-1/2 transition-opacity duration-200 whitespace-nowrap z-10">
                   {color.name}
                 </span>
               </button>

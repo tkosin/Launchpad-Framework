@@ -340,16 +340,21 @@ Contact support at support@facgure.com or call +66 2 123 4567.
   const renderProfileContent = () => {
     return (
       <div className="h-full flex flex-col">
-        <div className="p-6 flex flex-col items-center border-b border-gray-200">
+        <div className="p-4 sm:p-6 flex flex-col items-center border-b border-gray-200">
           <div
-            className="h-24 w-24 rounded-full overflow-hidden relative border-4 border-white shadow-md mb-4 cursor-pointer"
+            className="h-20 w-20 sm:h-24 sm:w-24 rounded-full overflow-hidden relative border-4 border-white shadow-md mb-4 cursor-pointer"
             onClick={onAvatarChangeClick}
           >
             <Image src={userAvatar || "/placeholder.svg"} alt="Profile" fill className="object-cover" />
+            <div className="absolute inset-0 bg-black/0 hover:bg-black/20 flex items-center justify-center transition-all">
+              <div className="bg-facgure-blue rounded-full p-2 opacity-0 hover:opacity-100 transform translate-y-1 hover:translate-y-0 transition-all">
+                <FontAwesomeIcon icon={faUser} className="h-4 w-4 text-white" />
+              </div>
+            </div>
           </div>
-          <h3 className="font-medium text-lg">{userName}</h3>
-          <p className="text-gray-600">{userCompany}</p>
-          <p className="text-gray-500 text-sm">{userEmail}</p>
+          <h3 className="font-medium text-lg text-center">{userName}</h3>
+          <p className="text-gray-600 text-center">{userCompany}</p>
+          <p className="text-gray-500 text-sm text-center">{userEmail}</p>
         </div>
         <div className="p-4">
           <div className="space-y-2">

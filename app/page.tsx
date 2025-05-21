@@ -2,21 +2,22 @@
 
 import Image from "next/image"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faBell, faCircleQuestion, faFlag, faChevronDown, faXmark, faPlus } from "@fortawesome/free-solid-svg-icons"
+import { faBell, faCircleQuestion, faFlag, faChevronDown, faPlus } from "@fortawesome/free-solid-svg-icons"
 import { useState, useEffect } from "react"
 import { AvatarChangeModal } from "@/components/avatar-change-modal"
 import { AppIcon } from "@/components/app-icon"
 import { UnifiedSidebar } from "@/components/unified-sidebar"
 import { useLanguage } from "@/contexts/language-context"
+import { useToast } from "@/contexts/toast-context"
 import { loadApps, convertToAppType } from "@/utils/app-loader"
 import type { AppWithIcon } from "@/types/app-manifest"
 import type { AppType } from "@/types/app"
 
 export default function Dashboard() {
   const { t, language, setLanguage } = useLanguage()
+  const { showToast } = useToast()
   const [allApps, setAllApps] = useState<AppWithIcon[]>([])
   const [installedApps, setInstalledApps] = useState<AppType[]>([])
-  const [showNotification, setShowNotification] = useState(true)
   const [notifications, setNotifications] = useState([
     {
       id: 1,
@@ -70,6 +71,20 @@ export default function Dashboard() {
     }
   }, [])
 
+  // Show registration success toast on initial load
+  useEffect(() => {
+    // Check if this is the first visit
+    const hasSeenWelcome = localStorage.getItem("hasSeenWelcome")
+
+    if (!hasSeenWelcome) {
+      // Show the welcome toast with a longer duration (8 seconds)
+      setTimeout(() => {
+        showToast("success", t("congratulations"), t("verificationComplete"), 8000)
+        localStorage.setItem("hasSeenWelcome", "true")
+      }, 1000) // Delay by 1 second to ensure the page has loaded
+    }
+  }, [showToast, t])
+
   const handleNavbarColorChange = (color: string) => {
     setNavbarColor(color)
     localStorage.setItem("navbarColor", color)
@@ -94,15 +109,22 @@ export default function Dashboard() {
         timestamp: new Date().toISOString(),
       }
       setNotifications([newNotification, ...notifications])
+
+      // Show toast notification
+      showToast("success", t("appInstalled"), `${app.name} ${t("appInstalledMessage")}`)
     }
   }
 
   const handleDeleteApp = (id: number) => {
-    setInstalledApps(installedApps.filter((app) => app.id !== id))
-  }
+    // Find the app name before removing it
+    const appToDelete = installedApps.find((app) => app.id === id)
 
-  const handleDismissNotification = () => {
-    setShowNotification(false)
+    if (appToDelete) {
+      setInstalledApps(installedApps.filter((app) => app.id !== id))
+
+      // Show toast notification
+      showToast("info", t("appRemoved"), `${appToDelete.name} ${t("appRemovedMessage")}`)
+    }
   }
 
   const openSidebar = (section: "help" | "notifications" | "profile" | "appstore") => {
@@ -120,10 +142,16 @@ export default function Dashboard() {
 
   const clearAllNotifications = () => {
     setNotifications([])
+
+    // Show toast notification
+    showToast("info", t("notificationsCleared"), t("notificationsClearedMessage"))
   }
 
   const handleAvatarChange = (newAvatarUrl: string) => {
     setUserAvatar(newAvatarUrl)
+
+    // Show toast notification
+    showToast("success", t("avatarUpdated"), t("avatarUpdatedMessage"))
   }
 
   // Determine if text should be white or black based on background color
@@ -162,6 +190,12 @@ export default function Dashboard() {
   // Add a function to count notifications per app
   const getNotificationCountForApp = (appId: number) => {
     return notifications.filter((notification) => notification.appId === appId).length
+  }
+
+  // Function to reset welcome message (for testing)
+  const resetWelcomeMessage = () => {
+    localStorage.removeItem("hasSeenWelcome")
+    window.location.reload()
   }
 
   return (
@@ -306,34 +340,19 @@ export default function Dashboard() {
             </div>
           </div>
         </div>
-      </main>
 
-      {/* Success Notification */}
-      {showNotification && (
-        <div className="fixed bottom-4 right-4 z-50 bg-white rounded-md shadow-md p-3 pr-8 flex items-center gap-3 max-w-sm border-l-4 border-green-600">
-          <div className="bg-green-600 rounded-full p-1 flex-shrink-0">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-4 w-4 text-white"
-              viewBox="0 0 20 20"
-              fill="currentColor"
+        {/* For development/testing only - button to reset welcome message */}
+        {process.env.NODE_ENV === "development" && (
+          <div className="mt-8 text-center">
+            <button
+              onClick={resetWelcomeMessage}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-md text-sm hover:bg-gray-300 transition-colors"
             >
-              <path
-                fillRule="evenodd"
-                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                clipRule="evenodd"
-              />
-            </svg>
+              Reset Welcome Message (Dev Only)
+            </button>
           </div>
-          <div className="text-sm">
-            <p className="font-medium text-gray-800">{t("congratulations")}</p>
-            <p className="text-gray-600 text-xs">{t("verificationComplete")}</p>
-          </div>
-          <button className="absolute top-2 right-2" onClick={handleDismissNotification}>
-            <FontAwesomeIcon icon={faXmark} className="h-4 w-4 text-gray-400" />
-          </button>
-        </div>
-      )}
+        )}
+      </main>
 
       {/* Unified Sidebar */}
       <UnifiedSidebar
