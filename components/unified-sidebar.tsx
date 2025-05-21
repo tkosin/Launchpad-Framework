@@ -16,9 +16,9 @@ import {
   faFileLines,
 } from "@fortawesome/free-solid-svg-icons"
 import ReactMarkdown from "react-markdown"
-import Image from "next/image"
 import { ColorPalette } from "./color-palette"
 import { useAuth } from "@/contexts/auth-context"
+import { LogoImage } from "./logo-image"
 import type { AppType } from "@/types/app"
 
 interface UnifiedSidebarProps {
@@ -134,7 +134,7 @@ Welcome to the Facgure Procurement System. This guide will help you navigate and
 ## Need More Help?
 
 Contact support at support@facgure.com or call +66 2 123 4567.
-      `
+    `
           : `
 # วิธีใช้ระบบ Facgure
 
@@ -169,7 +169,7 @@ Contact support at support@facgure.com or call +66 2 123 4567.
 ## ต้องการความช่วยเหลือเพิ่มเติม?
 
 ติดต่อฝ่ายสนับสนุนที่ support@facgure.com หรือโทร +66 2 123 4567
-      `
+    `
 
       setHelpContent(mockHelpContent)
     } catch (err) {
@@ -347,7 +347,7 @@ Contact support at support@facgure.com or call +66 2 123 4567.
             className="h-20 w-20 sm:h-24 sm:w-24 rounded-full overflow-hidden relative border-4 border-white shadow-md mb-4 cursor-pointer"
             onClick={onAvatarChangeClick}
           >
-            <Image src={userAvatar || "/placeholder.svg"} alt="Profile" fill className="object-cover" />
+            <LogoImage src={userAvatar || "/placeholder.svg"} alt="Profile" fill className="object-cover" />
             <div className="absolute inset-0 bg-black/0 hover:bg-black/20 flex items-center justify-center transition-all">
               <div className="bg-facgure-blue rounded-full p-2 opacity-0 hover:opacity-100 transform translate-y-1 hover:translate-y-0 transition-all">
                 <FontAwesomeIcon icon={faUser} className="h-4 w-4 text-white" />

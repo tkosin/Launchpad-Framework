@@ -1,6 +1,5 @@
 "use client"
 
-import Image from "next/image"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faBell, faCircleQuestion, faFlag, faChevronDown, faPlus } from "@fortawesome/free-solid-svg-icons"
 import { useState, useEffect } from "react"
@@ -11,6 +10,7 @@ import { useLanguage } from "@/contexts/language-context"
 import { useToast } from "@/contexts/toast-context"
 import { useAuth } from "@/contexts/auth-context"
 import { loadApps, convertToAppType } from "@/utils/app-loader"
+import { LogoImage } from "@/components/logo-image"
 import type { AppWithIcon } from "@/types/app-manifest"
 import type { AppType } from "@/types/app"
 
@@ -242,7 +242,7 @@ export default function Dashboard() {
         style={{ backgroundColor: navbarColor }}
       >
         <div className="h-10 w-40 relative">
-          <Image src="/facgure-logo-light.png" alt="Facgure Logo" fill className="object-contain" />
+          <LogoImage src="/facgure-logo-light.png" alt="Facgure Logo" fill />
         </div>
         <div className="flex items-center gap-4">
           {/* Custom language switcher directly in the header */}
@@ -301,7 +301,7 @@ export default function Dashboard() {
           <div className="relative">
             <button className="flex items-center gap-2" onClick={() => openSidebar("profile")}>
               <div className="h-9 w-9 rounded-full overflow-hidden relative border-2 border-white shadow-sm cursor-pointer">
-                <Image
+                <LogoImage
                   src={userAvatar || "/placeholder.svg"}
                   alt="Profile"
                   width={36}

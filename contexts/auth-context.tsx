@@ -62,13 +62,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const login = async (email: string, password: string): Promise<boolean> => {
     setIsLoading(true)
     try {
-      // In a real app, you would validate with your backend
-      // For demo purposes, we'll simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000))
-
-      // Mock user data based on email
+      // Simplified login logic for demo purposes
       let mockUser: User | null = null
 
+      // Check for admin credentials
       if (email === "admin@facgure.com" && password === "admin123") {
         mockUser = {
           id: "admin-1",
@@ -78,7 +75,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           avatar: "/avatars/avatar-1.png",
           company: "Facgure Technologies",
         }
-      } else if (email === "user@facgure.com" && password === "user123") {
+      }
+      // Check for user credentials
+      else if (email === "user@facgure.com" && password === "user123") {
         mockUser = {
           id: "user-1",
           name: "อภิชาติ นิลมณีติ",
@@ -87,8 +86,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           avatar: "/diverse-group.png",
           company: "บริษัท โซลาร์เอเชีย.เท็ค จำกัด",
         }
+      }
+      // Allow any email/password for demo purposes
+      else if (email && password) {
+        // For demo purposes, allow any login with valid email format
+        if (email.includes("@")) {
+          mockUser = {
+            id: `user-${Date.now()}`,
+            name: email.split("@")[0],
+            email: email,
+            role: "user",
+            avatar: "/diverse-group.png",
+            company: "Demo Company",
+          }
+        } else {
+          return false
+        }
       } else {
-        // In a real app, you would check against the database
         return false
       }
 

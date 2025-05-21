@@ -4,7 +4,6 @@ import type React from "react"
 
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
-import Image from "next/image"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faGoogle, faMicrosoft } from "@fortawesome/free-brands-svg-icons"
 import { faEye, faEyeSlash, faSpinner } from "@fortawesome/free-solid-svg-icons"
@@ -13,6 +12,7 @@ import { useLanguage } from "@/contexts/language-context"
 import { LanguageSwitcher } from "@/components/language-switcher"
 import { ForgotPasswordModal } from "@/components/forgot-password-modal"
 import { DemoAccountModal } from "@/components/demo-account-modal"
+import { LogoImage } from "@/components/logo-image"
 
 export default function LoginPage() {
   const [email, setEmail] = useState("")
@@ -98,7 +98,7 @@ export default function LoginPage() {
     <div className="min-h-screen flex flex-col bg-gray-50">
       <header className="bg-facgure-blue text-white py-2 px-4 flex justify-between items-center">
         <div className="h-10 w-40 relative">
-          <Image src="/facgure-logo-light.png" alt="Facgure Logo" fill className="object-contain" />
+          <LogoImage src="/facgure-logo-light.png" alt="Facgure Logo" fill />
         </div>
         <LanguageSwitcher />
       </header>
