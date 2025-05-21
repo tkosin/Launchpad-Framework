@@ -13,9 +13,10 @@ interface AppIconProps {
   icon: IconDefinition
   color: string
   onDelete: (id: number) => void
+  notificationCount?: number
 }
 
-export function AppIcon({ id, name, icon, color, onDelete }: AppIconProps) {
+export function AppIcon({ id, name, icon, color, onDelete, notificationCount = 0 }: AppIconProps) {
   const [isLongPressing, setIsLongPressing] = useState(false)
   const [isDeleting, setIsDeleting] = useState(false)
   const longPressTimer = useRef<NodeJS.Timeout | null>(null)
@@ -96,6 +97,13 @@ export function AppIcon({ id, name, icon, color, onDelete }: AppIconProps) {
             <FontAwesomeIcon icon={icon} className="w-6 h-6 text-white" />
           </div>
         </div>
+
+        {/* Notification badge */}
+        {notificationCount > 0 && (
+          <div className="absolute -top-2 -right-2 bg-facgure-orange text-white text-xs rounded-full min-w-[20px] h-5 flex items-center justify-center px-1 font-medium shadow-sm">
+            {notificationCount > 99 ? "99+" : notificationCount}
+          </div>
+        )}
 
         {/* Delete button that appears on long press */}
         {isLongPressing && (

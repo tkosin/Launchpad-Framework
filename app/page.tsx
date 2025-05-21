@@ -18,9 +18,27 @@ export default function Dashboard() {
   const [installedApps, setInstalledApps] = useState<AppType[]>([])
   const [showNotification, setShowNotification] = useState(true)
   const [notifications, setNotifications] = useState([
-    { id: 1, app: "ERC", message: "New document available for review" },
-    { id: 2, app: "RE Procurement", message: "Procurement request approved by management" },
-    { id: 3, app: "Power Purchase", message: "New power purchase agreement requires attention" },
+    {
+      id: 1,
+      appId: 1, // ERC app id
+      app: "ERC",
+      message: "New document available for review",
+      timestamp: new Date(Date.now() - 3600000).toISOString(), // 1 hour ago
+    },
+    {
+      id: 2,
+      appId: 2, // RE Procurement app id
+      app: "RE Procurement",
+      message: "Procurement request approved by management",
+      timestamp: new Date(Date.now() - 7200000).toISOString(), // 2 hours ago
+    },
+    {
+      id: 3,
+      appId: 4, // Power Purchase app id
+      app: "Power Purchase",
+      message: "New power purchase agreement requires attention",
+      timestamp: new Date(Date.now() - 86400000).toISOString(), // 1 day ago
+    },
   ])
   const [showAvatarModal, setShowAvatarModal] = useState(false)
   const [userAvatar, setUserAvatar] = useState("/diverse-group.png")
@@ -70,8 +88,10 @@ export default function Dashboard() {
       // Add a notification about the new app
       const newNotification = {
         id: Date.now(),
+        appId: app.id,
         app: "Application Directory",
         message: `${app.name} has been installed successfully`,
+        timestamp: new Date().toISOString(),
       }
       setNotifications([newNotification, ...notifications])
     }
@@ -137,6 +157,11 @@ export default function Dashboard() {
   const handleLanguageChange = (lang: "en" | "th") => {
     setLanguage(lang)
     setLanguageDropdownOpen(false)
+  }
+
+  // Add a function to count notifications per app
+  const getNotificationCountForApp = (appId: number) => {
+    return notifications.filter((notification) => notification.appId === appId).length
   }
 
   return (
@@ -247,6 +272,7 @@ export default function Dashboard() {
                 icon={app.icon}
                 color={app.color}
                 onDelete={handleDeleteApp}
+                notificationCount={getNotificationCountForApp(app.id)}
               />
             ))}
           </div>

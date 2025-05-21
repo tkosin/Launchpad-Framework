@@ -134,6 +134,27 @@ const translations: TranslationsType = {
     en: "Communication",
     th: "การสื่อสาร",
   },
+  // Time-related translations
+  justNow: {
+    en: "just now",
+    th: "เมื่อสักครู่",
+  },
+  minutesAgo: {
+    en: "min ago",
+    th: "นาทีที่แล้ว",
+  },
+  hoursAgo: {
+    en: "hours ago",
+    th: "ชั่วโมงที่แล้ว",
+  },
+  yesterday: {
+    en: "yesterday",
+    th: "เมื่อวาน",
+  },
+  daysAgo: {
+    en: "days ago",
+    th: "วันที่แล้ว",
+  },
   // Add more translations as needed
 }
 

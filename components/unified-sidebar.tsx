@@ -13,6 +13,7 @@ import {
   faPlus,
   faMagnifyingGlass,
   faDownload,
+  faFileLines,
 } from "@fortawesome/free-solid-svg-icons"
 import ReactMarkdown from "react-markdown"
 import Image from "next/image"
@@ -23,7 +24,13 @@ interface UnifiedSidebarProps {
   isOpen: boolean
   onClose: () => void
   activeSection: "help" | "notifications" | "profile" | "appstore" | null
-  notifications: Array<{ id: number; app: string; message: string }>
+  notifications: Array<{
+    id: number
+    appId: number
+    app: string
+    message: string
+    timestamp: string
+  }>
   clearNotification: (id: number) => void
   clearAllNotifications: () => void
   userAvatar: string
@@ -248,11 +255,40 @@ Contact support at support@facgure.com or call +66 2 123 4567.
   }
 
   const renderNotificationsContent = () => {
+    // Function to format timestamp
+    const formatTimestamp = (timestamp: string) => {
+      const date = new Date(timestamp)
+      const now = new Date()
+      const diffMs = now.getTime() - date.getTime()
+      const diffMins = Math.floor(diffMs / 60000)
+      const diffHours = Math.floor(diffMins / 60)
+      const diffDays = Math.floor(diffHours / 24)
+
+      if (diffMins < 1) return language === "en" ? "just now" : "เมื่อสักครู่"
+      if (diffMins < 60) return `${diffMins} ${language === "en" ? "min ago" : "นาทีที่แล้ว"}`
+      if (diffHours < 24) return `${diffHours} ${language === "en" ? "hours ago" : "ชั่วโมงที่แล้ว"}`
+      if (diffDays === 1) return language === "en" ? "yesterday" : "เมื่อวาน"
+      return `${diffDays} ${language === "en" ? "days ago" : "วันที่แล้ว"}`
+    }
+
+    // Find app color and icon for each notification
+    const getAppInfo = (appId: number) => {
+      const app = installedApps.find((app) => app.id === appId)
+      return {
+        color: app?.color || "#002b41",
+        icon: app?.icon || faFileLines,
+      }
+    }
+
     return (
       <div className="h-full flex flex-col">
         <div className="p-3 border-b border-gray-200 flex justify-between items-center bg-white">
           <h3 className="font-medium">{t("allNotifications")}</h3>
-          <button className="text-facgure-blue hover:text-opacity-80 text-sm" onClick={clearAllNotifications}>
+          <button
+            className="text-facgure-blue hover:text-opacity-80 text-sm"
+            onClick={clearAllNotifications}
+            disabled={notifications.length === 0}
+          >
             {t("clearAll")}
           </button>
         </div>
@@ -264,20 +300,37 @@ Contact support at support@facgure.com or call +66 2 123 4567.
               <p className="text-sm text-gray-400">{t("allCaughtUp")}</p>
             </div>
           ) : (
-            notifications.map((notification) => (
-              <div key={notification.id} className="p-4 border-b border-gray-100 flex justify-between hover:bg-gray-50">
-                <div>
-                  <p className="font-medium text-sm">{notification.app}</p>
-                  <p className="text-gray-600 text-sm">{notification.message}</p>
-                </div>
-                <button
-                  className="text-gray-400 hover:text-gray-600"
-                  onClick={() => clearNotification(notification.id)}
+            notifications.map((notification) => {
+              const appInfo = getAppInfo(notification.appId)
+              return (
+                <div
+                  key={notification.id}
+                  className="p-4 border-b border-gray-100 flex justify-between hover:bg-gray-50"
                 >
-                  <FontAwesomeIcon icon={faXmark} className="w-4 h-4" />
-                </button>
-              </div>
-            ))
+                  <div className="flex gap-3">
+                    <div
+                      className="w-10 h-10 rounded-md flex-shrink-0 flex items-center justify-center"
+                      style={{ backgroundColor: appInfo.color }}
+                    >
+                      <FontAwesomeIcon icon={appInfo.icon} className="w-5 h-5 text-white" />
+                    </div>
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <p className="font-medium text-sm">{notification.app}</p>
+                        <span className="text-xs text-gray-400">{formatTimestamp(notification.timestamp)}</span>
+                      </div>
+                      <p className="text-gray-600 text-sm">{notification.message}</p>
+                    </div>
+                  </div>
+                  <button
+                    className="text-gray-400 hover:text-gray-600 ml-2 flex-shrink-0"
+                    onClick={() => clearNotification(notification.id)}
+                  >
+                    <FontAwesomeIcon icon={faXmark} className="w-4 h-4" />
+                  </button>
+                </div>
+              )
+            })
           )}
         </div>
       </div>
