@@ -15,9 +15,10 @@ interface AppIconProps {
   color: string
   onDelete: (id: number) => void
   notificationCount?: number
+  onClick?: () => void
 }
 
-export function AppIcon({ id, name, icon, color, onDelete, notificationCount = 0 }: AppIconProps) {
+export function AppIcon({ id, name, icon, color, onDelete, notificationCount = 0, onClick }: AppIconProps) {
   const { canDeleteApps } = useAuth()
   const [isLongPressing, setIsLongPressing] = useState(false)
   const [isDeleting, setIsDeleting] = useState(false)
@@ -95,6 +96,7 @@ export function AppIcon({ id, name, icon, color, onDelete, notificationCount = 0
         onMouseLeave={handleMouseLeave}
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
+        onClick={onClick}
       >
         <div
           className={`bg-white w-16 h-16 rounded-md shadow-sm border border-gray-200 flex items-center justify-center mb-2 transition-all ${

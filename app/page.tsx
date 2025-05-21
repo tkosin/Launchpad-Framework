@@ -13,6 +13,7 @@ import { loadApps, convertToAppType } from "@/utils/app-loader"
 import { LogoImage } from "@/components/logo-image"
 import type { AppWithIcon } from "@/types/app-manifest"
 import type { AppType } from "@/types/app-manifest"
+import { useRouter } from "next/navigation"
 
 export default function Dashboard() {
   const { t, language, setLanguage } = useLanguage()
@@ -49,6 +50,7 @@ export default function Dashboard() {
   const [languageDropdownOpen, setLanguageDropdownOpen] = useState(false)
   const languageDropdownRef = useRef<HTMLDivElement>(null)
   const [logoLoaded, setLogoLoaded] = useState(true)
+  const router = useRouter()
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -82,6 +84,12 @@ export default function Dashboard() {
 
     // Set default installed apps (system apps)
     const defaultApps = apps.filter((app) => app.isSystem).map((app) => convertToAppType(app))
+
+    // Ensure System Settings app is included
+    const systemSettingsApp = apps.find((app) => app.id === 10)
+    if (systemSettingsApp && !defaultApps.some((app) => app.id === 10)) {
+      defaultApps.push(convertToAppType(systemSettingsApp))
+    }
 
     setInstalledApps(defaultApps)
   }, [])
@@ -181,6 +189,20 @@ export default function Dashboard() {
 
       // Show toast notification
       showToast("info", t("appRemoved"), `${appToDelete.name} ${t("appRemovedMessage")}`)
+    }
+  }
+
+  const handleAppClick = (appId: number) => {
+    // Find the app by ID
+    const app = installedApps.find((app) => app.id === appId)
+
+    if (app) {
+      // Navigate to the appropriate route based on app ID
+      if (appId === 10) {
+        // System Settings app ID
+        router.push("/system-settings")
+      }
+      // Add other app routes as needed
     }
   }
 
@@ -372,6 +394,7 @@ export default function Dashboard() {
                 color={app.color}
                 onDelete={handleDeleteApp}
                 notificationCount={getNotificationCountForApp(app.id)}
+                onClick={() => handleAppClick(app.id)}
               />
             ))}
           </div>
