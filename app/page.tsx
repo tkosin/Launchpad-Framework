@@ -256,23 +256,6 @@ export default function Dashboard() {
   }
 
   // Fallback logo as inline SVG
-  const fallbackLogo = (
-    <div className="h-10 flex items-center">
-      <svg width="120" height="40" viewBox="0 0 120 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M10 8H110V32H10V8Z" fill="#ffffff" />
-        <text
-          x="60"
-          y="24"
-          fontFamily="Arial"
-          fontSize="16"
-          fill={textColorClass === "text-white" ? "#002b41" : "#ffffff"}
-          textAnchor="middle"
-        >
-          Facgure
-        </text>
-      </svg>
-    </div>
-  )
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
@@ -281,12 +264,9 @@ export default function Dashboard() {
         className={`${textColorClass} py-2 px-4 flex justify-between items-center transition-colors duration-300 shadow-sm`}
         style={{ backgroundColor: navbarColor }}
       >
+        {/* Update the logo source in the header */}
         <div className="h-10 w-40 relative">
-          {logoLoaded ? (
-            <LogoImage src="/facgure-logo-light.png" alt="Facgure Logo" fill onError={() => setLogoLoaded(false)} />
-          ) : (
-            fallbackLogo
-          )}
+          <LogoImage src="/facgure-logo-light.png" alt="Facgure Logo" fill />
         </div>
         <div className="flex items-center gap-4">
           {/* Custom language switcher directly in the header */}

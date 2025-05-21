@@ -146,11 +146,7 @@ export default function LoginPage() {
     <div className="min-h-screen flex flex-col bg-gray-50">
       <header className="bg-facgure-blue text-white py-2 px-4 flex justify-between items-center">
         <div className="h-10 w-40 relative">
-          {logoLoaded ? (
-            <LogoImage src="/facgure-logo-light.png" alt="Facgure Logo" fill onError={() => setLogoLoaded(false)} />
-          ) : (
-            fallbackLogo
-          )}
+          <LogoImage src="/facgure-logo-light.png" alt="Facgure Logo" fill />
         </div>
         <LanguageSwitcher />
       </header>
