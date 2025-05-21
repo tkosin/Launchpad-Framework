@@ -9,6 +9,7 @@ import { AppIcon } from "@/components/app-icon"
 import { UnifiedSidebar } from "@/components/unified-sidebar"
 import { useLanguage } from "@/contexts/language-context"
 import { useToast } from "@/contexts/toast-context"
+import { useAuth } from "@/contexts/auth-context"
 import { loadApps, convertToAppType } from "@/utils/app-loader"
 import type { AppWithIcon } from "@/types/app-manifest"
 import type { AppType } from "@/types/app"
@@ -16,6 +17,7 @@ import type { AppType } from "@/types/app"
 export default function Dashboard() {
   const { t, language, setLanguage } = useLanguage()
   const { showToast } = useToast()
+  const { user, canImportApps, canDeleteApps } = useAuth()
   const [allApps, setAllApps] = useState<AppWithIcon[]>([])
   const [installedApps, setInstalledApps] = useState<AppType[]>([])
   const [notifications, setNotifications] = useState([
@@ -42,7 +44,7 @@ export default function Dashboard() {
     },
   ])
   const [showAvatarModal, setShowAvatarModal] = useState(false)
-  const [userAvatar, setUserAvatar] = useState("/diverse-group.png")
+  const [userAvatar, setUserAvatar] = useState(user?.avatar || "/diverse-group.png")
   const [navbarColor, setNavbarColor] = useState("#002b41") // Default Facgure blue
   const [languageDropdownOpen, setLanguageDropdownOpen] = useState(false)
 
@@ -71,19 +73,43 @@ export default function Dashboard() {
     }
   }, [])
 
-  // Show registration success toast on initial load
+  // Show welcome message based on time of day
   useEffect(() => {
-    // Check if this is the first visit
-    const hasSeenWelcome = localStorage.getItem("hasSeenWelcome")
+    if (user) {
+      const hour = new Date().getHours()
+      let welcomeMessage = ""
 
-    if (!hasSeenWelcome) {
-      // Show the welcome toast with a longer duration (8 seconds)
+      if (hour >= 5 && hour < 12) {
+        welcomeMessage = language === "en" ? "Good morning" : "สวัสดีตอนเช้า"
+      } else if (hour >= 12 && hour < 18) {
+        welcomeMessage = language === "en" ? "Good afternoon" : "สวัสดีตอนบ่าย"
+      } else {
+        welcomeMessage = language === "en" ? "Good evening" : "สวัสดีตอนเย็น"
+      }
+
+      // Add user's name if available
+      if (user.name) {
+        welcomeMessage += `, ${user.name}`
+      }
+
+      // Show welcome toast
       setTimeout(() => {
-        showToast("success", t("congratulations"), t("verificationComplete"), 8000)
-        localStorage.setItem("hasSeenWelcome", "true")
-      }, 1000) // Delay by 1 second to ensure the page has loaded
+        showToast(
+          "success",
+          welcomeMessage,
+          language === "en" ? "Welcome back to Facgure Portal" : "ยินดีต้อนรับกลับสู่พอร์ทัล Facgure",
+          5000,
+        )
+      }, 1000)
     }
-  }, [showToast, t])
+  }, [user, language, showToast])
+
+  // Update avatar when user changes
+  useEffect(() => {
+    if (user?.avatar) {
+      setUserAvatar(user.avatar)
+    }
+  }, [user])
 
   const handleNavbarColorChange = (color: string) => {
     setNavbarColor(color)
@@ -110,12 +136,22 @@ export default function Dashboard() {
       }
       setNotifications([newNotification, ...notifications])
 
-      // Show toast notification
+      // Show toast notification with properly formatted message
       showToast("success", t("appInstalled"), `${app.name} ${t("appInstalledMessage")}`)
     }
   }
 
   const handleDeleteApp = (id: number) => {
+    // Check if user has permission to delete apps
+    if (!canDeleteApps) {
+      showToast(
+        "error",
+        language === "en" ? "Permission Denied" : "การเข้าถึงถูกปฏิเสธ",
+        language === "en" ? "You don't have permission to delete applications" : "คุณไม่มีสิทธิ์ลบแอปพลิเคชัน",
+      )
+      return
+    }
+
     // Find the app name before removing it
     const appToDelete = installedApps.find((app) => app.id === id)
 
@@ -274,9 +310,9 @@ export default function Dashboard() {
                 />
               </div>
               <div className="text-sm">
-                <p className={`font-medium ${textColorClass}`}>อภิชาติ นิลมณีติ</p>
+                <p className={`font-medium ${textColorClass}`}>{user?.name || "อภิชาติ นิลมณีติ"}</p>
                 <p className={`text-xs ${textColorClass === "text-white" ? "text-gray-300" : "text-gray-600"}`}>
-                  บริษัท โซลาร์เอเชีย.เท็ค จำกัด
+                  {user?.company || "บริษัท โซลาร์เอเชีย.เท็ค จำกัด"}
                 </p>
               </div>
             </button>
@@ -289,13 +325,15 @@ export default function Dashboard() {
         {/* Menu Icons */}
         <div className="mb-6">
           <div className="flex justify-end items-center mb-4">
-            <button
-              onClick={handleOpenAppStore}
-              className="px-4 py-2 bg-facgure-blue text-white rounded-md text-sm hover:bg-opacity-90 transition-colors flex items-center gap-2"
-            >
-              <FontAwesomeIcon icon={faPlus} className="w-3.5 h-3.5" />
-              {t("importApps")}
-            </button>
+            {canImportApps && (
+              <button
+                onClick={handleOpenAppStore}
+                className="px-4 py-2 bg-facgure-blue text-white rounded-md text-sm hover:bg-opacity-90 transition-colors flex items-center gap-2"
+              >
+                <FontAwesomeIcon icon={faPlus} className="w-3.5 h-3.5" />
+                {t("importApps")}
+              </button>
+            )}
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
             {installedApps.map((app) => (
@@ -363,9 +401,9 @@ export default function Dashboard() {
         clearNotification={clearNotification}
         clearAllNotifications={clearAllNotifications}
         userAvatar={userAvatar}
-        userEmail="user@solarasia.tech"
-        userName="อภิชาติ นิลมณีติ"
-        userCompany="บริษัท โซลาร์เอเชีย.เท็ค จำกัด"
+        userEmail={user?.email || "user@solarasia.tech"}
+        userName={user?.name || "อภิชาติ นิลมณีติ"}
+        userCompany={user?.company || "บริษัท โซลาร์เอเชีย.เท็ค จำกัด"}
         onAvatarChangeClick={() => setShowAvatarModal(true)}
         navbarColor={navbarColor}
         onNavbarColorChange={handleNavbarColorChange}

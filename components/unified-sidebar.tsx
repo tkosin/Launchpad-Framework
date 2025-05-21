@@ -18,6 +18,7 @@ import {
 import ReactMarkdown from "react-markdown"
 import Image from "next/image"
 import { ColorPalette } from "./color-palette"
+import { useAuth } from "@/contexts/auth-context"
 import type { AppType } from "@/types/app"
 
 interface UnifiedSidebarProps {
@@ -72,6 +73,7 @@ export function UnifiedSidebar({
   const [error, setError] = useState<string | null>(null)
   const [searchQuery, setSearchQuery] = useState("")
   const [appCategory, setAppCategory] = useState<string>("all")
+  const { logout } = useAuth()
 
   useEffect(() => {
     if (isOpen && activeSection === "help") {
@@ -372,7 +374,10 @@ Contact support at support@facgure.com or call +66 2 123 4567.
               <FontAwesomeIcon icon={faGear} className="w-5 h-5 text-facgure-blue" />
               <span>{t("accountSettings")}</span>
             </button>
-            <button className="w-full text-left px-4 py-3 text-sm text-gray-700 hover:bg-gray-100 rounded-md flex items-center gap-2">
+            <button
+              className="w-full text-left px-4 py-3 text-sm text-gray-700 hover:bg-gray-100 rounded-md flex items-center gap-2"
+              onClick={logout}
+            >
               <FontAwesomeIcon icon={faRightFromBracket} className="w-5 h-5 text-facgure-blue" />
               <span>{t("logout")}</span>
             </button>

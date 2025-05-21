@@ -6,6 +6,7 @@ import { useState, useRef, useEffect } from "react"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faXmark } from "@fortawesome/free-solid-svg-icons"
 import type { IconDefinition } from "@fortawesome/fontawesome-svg-core"
+import { useAuth } from "@/contexts/auth-context"
 
 interface AppIconProps {
   id: number
@@ -17,6 +18,7 @@ interface AppIconProps {
 }
 
 export function AppIcon({ id, name, icon, color, onDelete, notificationCount = 0 }: AppIconProps) {
+  const { canDeleteApps } = useAuth()
   const [isLongPressing, setIsLongPressing] = useState(false)
   const [isDeleting, setIsDeleting] = useState(false)
   const longPressTimer = useRef<NodeJS.Timeout | null>(null)
@@ -31,6 +33,9 @@ export function AppIcon({ id, name, icon, color, onDelete, notificationCount = 0
   }, [])
 
   const handleMouseDown = () => {
+    // Only allow long press if user has delete permission
+    if (!canDeleteApps) return
+
     longPressTimer.current = setTimeout(() => {
       setIsLongPressing(true)
     }, 500) // 500ms for long press
@@ -56,6 +61,9 @@ export function AppIcon({ id, name, icon, color, onDelete, notificationCount = 0
   }
 
   const handleTouchStart = () => {
+    // Only allow long press if user has delete permission
+    if (!canDeleteApps) return
+
     longPressTimer.current = setTimeout(() => {
       setIsLongPressing(true)
     }, 500)
@@ -105,8 +113,8 @@ export function AppIcon({ id, name, icon, color, onDelete, notificationCount = 0
           </div>
         )}
 
-        {/* Delete button that appears on long press */}
-        {isLongPressing && (
+        {/* Delete button that appears on long press - only if user has permission */}
+        {isLongPressing && canDeleteApps && (
           <button
             className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center shadow-md animate-in zoom-in-95"
             onClick={handleDelete}
