@@ -48,6 +48,7 @@ export default function Dashboard() {
   const [navbarColor, setNavbarColor] = useState("#002b41") // Default Facgure blue
   const [languageDropdownOpen, setLanguageDropdownOpen] = useState(false)
   const languageDropdownRef = useRef<HTMLDivElement>(null)
+  const [logoLoaded, setLogoLoaded] = useState(true)
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -281,7 +282,11 @@ export default function Dashboard() {
         style={{ backgroundColor: navbarColor }}
       >
         <div className="h-10 w-40 relative">
-          <LogoImage src="/facgure-logo-light.png" alt="Facgure Logo" fill />
+          {logoLoaded ? (
+            <LogoImage src="/facgure-logo-light.png" alt="Facgure Logo" fill onError={() => setLogoLoaded(false)} />
+          ) : (
+            fallbackLogo
+          )}
         </div>
         <div className="flex items-center gap-4">
           {/* Custom language switcher directly in the header */}

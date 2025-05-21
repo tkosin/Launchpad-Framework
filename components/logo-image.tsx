@@ -29,11 +29,13 @@ export function LogoImage({ src, alt, width, height, className, fill = false }: 
     if (errorCount === 0) {
       // Try without leading slash
       const newSrc = src.startsWith("/") ? src.substring(1) : `/${src}`
+      console.log("Trying path without leading slash:", newSrc)
       setImgSrc(newSrc)
       setErrorCount(1)
     } else if (errorCount === 1) {
       // Try with explicit public path
       const newSrc = src.startsWith("/") ? `/public${src}` : `/public/${src}`
+      console.log("Trying with explicit public path:", newSrc)
       setImgSrc(newSrc)
       setErrorCount(2)
     } else if (errorCount === 2) {
@@ -42,10 +44,19 @@ export function LogoImage({ src, alt, width, height, className, fill = false }: 
       const protocol = window.location.protocol
       const baseUrl = `${protocol}//${hostname}`
       const newSrc = src.startsWith("/") ? `${baseUrl}${src}` : `${baseUrl}/${src}`
+      console.log("Trying with absolute URL:", newSrc)
       setImgSrc(newSrc)
       setErrorCount(3)
+    } else if (errorCount === 3) {
+      // Try with direct Vercel deployment URL
+      const vercelUrl = "https://facgure-launchpad.vercel.app"
+      const newSrc = src.startsWith("/") ? `${vercelUrl}${src}` : `${vercelUrl}/${src}`
+      console.log("Trying with Vercel deployment URL:", newSrc)
+      setImgSrc(newSrc)
+      setErrorCount(4)
     } else {
       // Final fallback - use a data URL for a simple placeholder
+      console.log("Using fallback SVG")
       setImgSrc(
         "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='40' viewBox='0 0 100 40'%3E%3Crect width='100' height='40' fill='%23002b41'/%3E%3Ctext x='50' y='25' fontFamily='Arial' fontSize='12' fill='white' textAnchor='middle'%3EFacgure%3C/text%3E%3C/svg%3E",
       )

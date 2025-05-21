@@ -22,6 +22,7 @@ export default function LoginPage() {
   const [error, setError] = useState("")
   const [showForgotPassword, setShowForgotPassword] = useState(false)
   const [showDemoAccounts, setShowDemoAccounts] = useState(false)
+  const [logoLoaded, setLogoLoaded] = useState(true)
   const { login, loginWithGoogle, loginWithMicrosoft, isAuthenticated } = useAuth()
   const { t, language } = useLanguage()
   const router = useRouter()
@@ -105,6 +106,16 @@ export default function LoginPage() {
     setIsLoggingIn(true)
 
     try {
+      // For demo accounts, allow login regardless of domain
+      const isDemoAccount =
+        (email === "admin@facgure.com" && password === "admin123") ||
+        (email === "user@facgure.com" && password === "user123")
+
+      // Add a small delay to ensure localStorage updates properly
+      if (isDemoAccount) {
+        await new Promise((resolve) => setTimeout(resolve, 500))
+      }
+
       const success = await login(email, password)
       if (success) {
         router.push("/")
@@ -135,7 +146,11 @@ export default function LoginPage() {
     <div className="min-h-screen flex flex-col bg-gray-50">
       <header className="bg-facgure-blue text-white py-2 px-4 flex justify-between items-center">
         <div className="h-10 w-40 relative">
-          <LogoImage src="/facgure-logo-light.png" alt="Facgure Logo" fill />
+          {logoLoaded ? (
+            <LogoImage src="/facgure-logo-light.png" alt="Facgure Logo" fill onError={() => setLogoLoaded(false)} />
+          ) : (
+            fallbackLogo
+          )}
         </div>
         <LanguageSwitcher />
       </header>

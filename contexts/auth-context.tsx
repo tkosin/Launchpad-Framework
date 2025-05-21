@@ -65,6 +65,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       // Simplified login logic for demo purposes
       let mockUser: User | null = null
 
+      // Check if we're on the Vercel deployment
+      const isVercelDeployment = typeof window !== "undefined" && window.location.hostname.includes("vercel.app")
+
       // Check for admin credentials
       if (email === "admin@facgure.com" && password === "admin123") {
         mockUser = {
@@ -111,7 +114,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         localStorage.setItem("user", JSON.stringify(mockUser))
 
         // Add a small delay to ensure localStorage is updated
-        await new Promise((resolve) => setTimeout(resolve, 100))
+        await new Promise((resolve) => setTimeout(resolve, 300))
 
         return true
       }
@@ -144,6 +147,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       setUser(mockUser)
       localStorage.setItem("user", JSON.stringify(mockUser))
+
+      // Add a small delay to ensure localStorage is updated
+      await new Promise((resolve) => setTimeout(resolve, 300))
+
       return true
     } catch (error) {
       console.error("Google login error:", error)
@@ -172,6 +179,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       setUser(mockUser)
       localStorage.setItem("user", JSON.stringify(mockUser))
+
+      // Add a small delay to ensure localStorage is updated
+      await new Promise((resolve) => setTimeout(resolve, 300))
+
       return true
     } catch (error) {
       console.error("Microsoft login error:", error)
