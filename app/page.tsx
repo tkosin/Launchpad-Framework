@@ -2,7 +2,7 @@
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faBell, faCircleQuestion, faFlag, faChevronDown, faPlus } from "@fortawesome/free-solid-svg-icons"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { AvatarChangeModal } from "@/components/avatar-change-modal"
 import { AppIcon } from "@/components/app-icon"
 import { UnifiedSidebar } from "@/components/unified-sidebar"
@@ -12,7 +12,7 @@ import { useAuth } from "@/contexts/auth-context"
 import { loadApps, convertToAppType } from "@/utils/app-loader"
 import { LogoImage } from "@/components/logo-image"
 import type { AppWithIcon } from "@/types/app-manifest"
-import type { AppType } from "@/types/app"
+import type { AppType } from "@/types/app-manifest"
 
 export default function Dashboard() {
   const { t, language, setLanguage } = useLanguage()
@@ -47,6 +47,26 @@ export default function Dashboard() {
   const [userAvatar, setUserAvatar] = useState(user?.avatar || "/diverse-group.png")
   const [navbarColor, setNavbarColor] = useState("#002b41") // Default Facgure blue
   const [languageDropdownOpen, setLanguageDropdownOpen] = useState(false)
+  const languageDropdownRef = useRef<HTMLDivElement>(null)
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (languageDropdownRef.current && !languageDropdownRef.current.contains(event.target as Node)) {
+        setLanguageDropdownOpen(false)
+      }
+    }
+
+    // Add event listener when dropdown is open
+    if (languageDropdownOpen) {
+      document.addEventListener("mousedown", handleClickOutside)
+    }
+
+    // Clean up event listener
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside)
+    }
+  }, [languageDropdownOpen])
 
   // Unified sidebar state
   const [sidebarOpen, setSidebarOpen] = useState(false)
@@ -281,7 +301,10 @@ export default function Dashboard() {
             </button>
 
             {languageDropdownOpen && (
-              <div className="absolute right-0 mt-1 py-1 bg-white rounded-md shadow-md z-50 min-w-[120px] animate-in fade-in zoom-in-95 duration-100 border border-gray-200">
+              <div
+                ref={languageDropdownRef}
+                className="absolute right-0 mt-1 py-1 bg-white rounded-md shadow-md z-50 min-w-[120px] animate-in fade-in zoom-in-95 duration-100 border border-gray-200"
+              >
                 <button
                   className={`flex items-center gap-2 w-full px-3 py-2 text-left text-sm ${
                     language === "en" ? "bg-gray-50" : "hover:bg-gray-50"
