@@ -502,8 +502,9 @@ Contact support at support@facgure.com or call +66 2 123 4567.
         {/* Header */}
         <div className="flex items-center justify-between p-4 bg-facgure-blue text-white">
           <div className="flex items-center gap-2">
-            {renderSectionIcon()}
-            <h2 className="text-lg font-medium">{renderSectionTitle()}</h2>
+            <div className="h-10 w-40 relative">
+              <LogoImage src="/facgure-logo-light.png" alt="Facgure Logo" fill />
+            </div>
           </div>
           <button onClick={onClose} className="p-1 rounded-full hover:bg-white/10">
             <FontAwesomeIcon icon={faXmark} className="h-5 w-5" />
