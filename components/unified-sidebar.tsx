@@ -499,12 +499,10 @@ Contact support at support@facgure.com or call +66 2 123 4567.
 
       {/* Sidebar */}
       <div className="fixed right-0 h-full w-80 md:w-96 bg-white shadow-xl flex flex-col animate-in slide-in-from-right">
-        {/* Header */}
         <div className="flex items-center justify-between p-4 bg-facgure-blue text-white">
           <div className="flex items-center gap-2">
-            <div className="h-10 w-40 relative">
-              <LogoImage src="/facgure-logo-light.png" alt="Facgure Logo" fill />
-            </div>
+            {renderSectionIcon()}
+            <h2 className="text-lg font-medium">{renderSectionTitle()}</h2>
           </div>
           <button onClick={onClose} className="p-1 rounded-full hover:bg-white/10">
             <FontAwesomeIcon icon={faXmark} className="h-5 w-5" />
