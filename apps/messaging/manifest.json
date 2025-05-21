@@ -1,0 +1,22 @@
+{
+  "id": 8,
+  "name": "Messaging",
+  "description": "Secure messaging platform for team communication",
+  "version": "1.0.0",
+  "author": {
+    "name": "Facgure",
+    "email": "support@facgure.com"
+  },
+  "category": "communication",
+  "icon": "faCommentDots",
+  "color": "#002b41",
+  "permissions": ["read:user"],
+  "entryPoint": "/apps/messaging/index.tsx",
+  "translations": {
+    "th": {
+      "name": "การส่งข้อความ",
+      "description": "แพลตฟอร์มการส่งข้อความที่ปลอดภัยสำหรับการสื่อสารในทีม"
+    }
+  },
+  "lastUpdated": "2023-11-10"
+}

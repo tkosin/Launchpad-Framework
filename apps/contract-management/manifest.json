@@ -1,0 +1,22 @@
+{
+  "id": 13,
+  "name": "Contract Management",
+  "description": "Create, manage, and track energy contracts and agreements",
+  "version": "1.0.0",
+  "author": {
+    "name": "Facgure",
+    "email": "support@facgure.com"
+  },
+  "category": "finance",
+  "icon": "faFileAlt",
+  "color": "#002b41",
+  "permissions": ["read:documents", "write:documents", "read:finance"],
+  "entryPoint": "/apps/contract-management/index.tsx",
+  "translations": {
+    "th": {
+      "name": "การจัดการสัญญา",
+      "description": "สร้าง จัดการ และติดตามสัญญาและข้อตกลงด้านพลังงาน"
+    }
+  },
+  "lastUpdated": "2023-11-15"
+}

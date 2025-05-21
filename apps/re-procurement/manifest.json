@@ -1,0 +1,23 @@
+{
+  "id": 2,
+  "name": "RE Procurement",
+  "description": "Renewable Energy procurement management system",
+  "version": "1.0.0",
+  "author": {
+    "name": "Facgure",
+    "email": "support@facgure.com"
+  },
+  "category": "finance",
+  "icon": "faFileLines",
+  "color": "#002b41",
+  "permissions": ["read:documents", "write:documents", "read:finance"],
+  "entryPoint": "/apps/re-procurement/index.tsx",
+  "isSystem": true,
+  "translations": {
+    "th": {
+      "name": "การจัดซื้อพลังงานหมุนเวียน",
+      "description": "ระบบจัดการการจัดซื้อพลังงานหมุนเวียน"
+    }
+  },
+  "lastUpdated": "2023-12-15"
+}

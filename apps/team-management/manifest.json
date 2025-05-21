@@ -1,0 +1,22 @@
+{
+  "id": 16,
+  "name": "Team Management",
+  "description": "Manage team members and their access to energy resources",
+  "version": "1.0.0",
+  "author": {
+    "name": "Facgure",
+    "email": "support@facgure.com"
+  },
+  "category": "communication",
+  "icon": "faUsers",
+  "color": "#002b41",
+  "permissions": ["read:user", "write:user"],
+  "entryPoint": "/apps/team-management/index.tsx",
+  "translations": {
+    "th": {
+      "name": "การจัดการทีม",
+      "description": "จัดการสมาชิกในทีมและการเข้าถึงทรัพยากรด้านพลังงานของพวกเขา"
+    }
+  },
+  "lastUpdated": "2023-08-15"
+}

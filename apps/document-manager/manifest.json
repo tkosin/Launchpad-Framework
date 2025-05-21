@@ -1,0 +1,22 @@
+{
+  "id": 7,
+  "name": "Document Manager",
+  "description": "Organize and manage all your energy-related documents in one place",
+  "version": "1.0.0",
+  "author": {
+    "name": "Facgure",
+    "email": "support@facgure.com"
+  },
+  "category": "utilities",
+  "icon": "faFileExcel",
+  "color": "#002b41",
+  "permissions": ["read:documents", "write:documents"],
+  "entryPoint": "/apps/document-manager/index.tsx",
+  "translations": {
+    "th": {
+      "name": "ตัวจัดการเอกสาร",
+      "description": "จัดระเบียบและจัดการเอกสารที่เกี่ยวข้องกับพลังงานทั้งหมดในที่เดียว"
+    }
+  },
+  "lastUpdated": "2023-09-15"
+}

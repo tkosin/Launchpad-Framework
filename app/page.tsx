@@ -2,184 +2,20 @@
 
 import Image from "next/image"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import {
-  faBell,
-  faCircleQuestion,
-  faHome,
-  faFileLines,
-  faUser,
-  faChartColumn,
-  faCalendar,
-  faFileExcel,
-  faEnvelope,
-  faCommentDots,
-  faGear,
-  faBolt,
-  faDatabase,
-  faFileAlt,
-  faBriefcase,
-  faChartPie,
-  faUsers,
-  faCreditCard,
-  faXmark,
-  faPlus,
-  faFlag,
-  faChevronDown, // Added import for faChevronDown
-} from "@fortawesome/free-solid-svg-icons"
+import { faBell, faCircleQuestion, faFlag, faChevronDown, faXmark, faPlus } from "@fortawesome/free-solid-svg-icons"
 import { useState, useEffect } from "react"
 import { AvatarChangeModal } from "@/components/avatar-change-modal"
 import { AppIcon } from "@/components/app-icon"
 import { UnifiedSidebar } from "@/components/unified-sidebar"
 import { useLanguage } from "@/contexts/language-context"
+import { loadApps, convertToAppType } from "@/utils/app-loader"
+import type { AppWithIcon } from "@/types/app-manifest"
 import type { AppType } from "@/types/app"
-
-// This could come from an API or configuration
-const defaultApps = [
-  {
-    id: 1,
-    name: "ERC",
-    icon: faHome,
-    color: "#002b41",
-    description: "Energy Regulatory Commission dashboard and tools",
-    category: "utilities",
-  },
-  {
-    id: 2,
-    name: "RE Procurement",
-    icon: faFileLines,
-    color: "#002b41",
-    description: "Renewable Energy procurement management system",
-    category: "finance",
-  },
-  {
-    id: 3,
-    name: "Profile",
-    icon: faUser,
-    color: "#002b41",
-    description: "User profile and account management",
-    category: "utilities",
-  },
-  {
-    id: 4,
-    name: "Power Purchase",
-    icon: faBell,
-    color: "#002b41",
-    description: "Power purchase agreements and notifications",
-    category: "finance",
-  },
-]
-
-// Available apps in the app store
-const storeApps: AppType[] = [
-  {
-    id: 5,
-    name: "Analytics Dashboard",
-    icon: faChartColumn,
-    color: "#002b41",
-    description: "Comprehensive analytics and reporting dashboard for energy consumption and production",
-    category: "productivity",
-  },
-  {
-    id: 6,
-    name: "Calendar",
-    icon: faCalendar,
-    color: "#002b41",
-    description: "Schedule meetings and manage events related to energy projects",
-    category: "productivity",
-  },
-  {
-    id: 7,
-    name: "Document Manager",
-    icon: faFileExcel,
-    color: "#002b41",
-    description: "Organize and manage all your energy-related documents in one place",
-    category: "utilities",
-  },
-  {
-    id: 8,
-    name: "Messaging",
-    icon: faCommentDots,
-    color: "#002b41",
-    description: "Secure messaging platform for team communication",
-    category: "communication",
-  },
-  {
-    id: 9,
-    name: "Email Client",
-    icon: faEnvelope,
-    color: "#002b41",
-    description: "Integrated email client for all your correspondence needs",
-    category: "communication",
-  },
-  {
-    id: 10,
-    name: "System Settings",
-    icon: faGear,
-    color: "#002b41",
-    description: "Configure system settings and preferences",
-    category: "utilities",
-  },
-  {
-    id: 11,
-    name: "Energy Optimizer",
-    icon: faBolt,
-    color: "#002b41",
-    description: "AI-powered tool to optimize energy usage and reduce costs",
-    category: "utilities",
-  },
-  {
-    id: 12,
-    name: "Database Explorer",
-    icon: faDatabase,
-    color: "#002b41",
-    description: "Access and query energy databases with an intuitive interface",
-    category: "productivity",
-  },
-  {
-    id: 13,
-    name: "Contract Management",
-    icon: faFileAlt,
-    color: "#002b41",
-    description: "Create, manage, and track energy contracts and agreements",
-    category: "finance",
-  },
-  {
-    id: 14,
-    name: "Project Tracker",
-    icon: faBriefcase,
-    color: "#002b41",
-    description: "Track progress of energy projects and initiatives",
-    category: "productivity",
-  },
-  {
-    id: 15,
-    name: "Financial Reports",
-    icon: faChartPie,
-    color: "#002b41",
-    description: "Generate and analyze financial reports for energy investments",
-    category: "finance",
-  },
-  {
-    id: 16,
-    name: "Team Management",
-    icon: faUsers,
-    color: "#002b41",
-    description: "Manage team members and their access to energy resources",
-    category: "communication",
-  },
-  {
-    id: 17,
-    name: "Payment Portal",
-    icon: faCreditCard,
-    color: "#002b41",
-    description: "Process payments and manage billing for energy services",
-    category: "finance",
-  },
-]
 
 export default function Dashboard() {
   const { t, language, setLanguage } = useLanguage()
-  const [apps, setApps] = useState<AppType[]>(defaultApps)
+  const [allApps, setAllApps] = useState<AppWithIcon[]>([])
+  const [installedApps, setInstalledApps] = useState<AppType[]>([])
   const [showNotification, setShowNotification] = useState(true)
   const [notifications, setNotifications] = useState([
     { id: 1, app: "ERC", message: "New document available for review" },
@@ -196,6 +32,17 @@ export default function Dashboard() {
   const [activeSidebarSection, setActiveSidebarSection] = useState<
     "help" | "notifications" | "profile" | "appstore" | null
   >(null)
+
+  // Load apps and set default installed apps
+  useEffect(() => {
+    const apps = loadApps()
+    setAllApps(apps)
+
+    // Set default installed apps (system apps)
+    const defaultApps = apps.filter((app) => app.isSystem).map((app) => convertToAppType(app))
+
+    setInstalledApps(defaultApps)
+  }, [])
 
   // Store navbar color in localStorage
   useEffect(() => {
@@ -217,8 +64,8 @@ export default function Dashboard() {
 
   const handleInstallApp = (app: AppType) => {
     // Check if app is already installed
-    if (!apps.some((installedApp) => installedApp.id === app.id)) {
-      setApps([...apps, app])
+    if (!installedApps.some((installedApp) => installedApp.id === app.id)) {
+      setInstalledApps([...installedApps, app])
 
       // Add a notification about the new app
       const newNotification = {
@@ -231,7 +78,7 @@ export default function Dashboard() {
   }
 
   const handleDeleteApp = (id: number) => {
-    setApps(apps.filter((app) => app.id !== id))
+    setInstalledApps(installedApps.filter((app) => app.id !== id))
   }
 
   const handleDismissNotification = () => {
@@ -277,7 +124,8 @@ export default function Dashboard() {
 
   // Get available apps that aren't already installed
   const getAvailableApps = () => {
-    return [...storeApps, ...defaultApps.filter((app) => !apps.some((a) => a.id === app.id))]
+    const installedIds = installedApps.map((app) => app.id)
+    return allApps.filter((app) => !installedIds.includes(app.id)).map((app) => convertToAppType(app))
   }
 
   // Toggle language dropdown
@@ -391,7 +239,7 @@ export default function Dashboard() {
             </button>
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-            {apps.map((app) => (
+            {installedApps.map((app) => (
               <AppIcon
                 key={app.id}
                 id={app.id}
@@ -477,7 +325,7 @@ export default function Dashboard() {
         navbarColor={navbarColor}
         onNavbarColorChange={handleNavbarColorChange}
         availableApps={getAvailableApps()}
-        installedApps={apps}
+        installedApps={installedApps}
         onInstallApp={handleInstallApp}
         language={language}
         t={t}

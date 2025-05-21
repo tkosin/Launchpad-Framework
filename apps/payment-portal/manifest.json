@@ -1,0 +1,22 @@
+{
+  "id": 17,
+  "name": "Payment Portal",
+  "description": "Process payments and manage billing for energy services",
+  "version": "1.0.0",
+  "author": {
+    "name": "Facgure",
+    "email": "support@facgure.com"
+  },
+  "category": "finance",
+  "icon": "faCreditCard",
+  "color": "#002b41",
+  "permissions": ["read:finance", "write:finance"],
+  "entryPoint": "/apps/payment-portal/index.tsx",
+  "translations": {
+    "th": {
+      "name": "พอร์ทัลการชำระเงิน",
+      "description": "ประมวลผลการชำระเงินและจัดการการเรียกเก็บเงินสำหรับบริการด้านพลังงาน"
+    }
+  },
+  "lastUpdated": "2023-07-30"
+}

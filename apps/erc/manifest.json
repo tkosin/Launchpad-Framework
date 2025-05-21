@@ -1,0 +1,23 @@
+{
+  "id": 1,
+  "name": "ERC",
+  "description": "Energy Regulatory Commission dashboard and tools",
+  "version": "1.0.0",
+  "author": {
+    "name": "Facgure",
+    "email": "support@facgure.com"
+  },
+  "category": "utilities",
+  "icon": "faHome",
+  "color": "#002b41",
+  "permissions": ["read:documents"],
+  "entryPoint": "/apps/erc/index.tsx",
+  "isSystem": true,
+  "translations": {
+    "th": {
+      "name": "ERC",
+      "description": "แดชบอร์ดและเครื่องมือของคณะกรรมการกำกับกิจการพลังงาน"
+    }
+  },
+  "lastUpdated": "2023-12-15"
+}

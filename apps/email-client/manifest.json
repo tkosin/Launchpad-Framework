@@ -1,0 +1,22 @@
+{
+  "id": 9,
+  "name": "Email Client",
+  "description": "Integrated email client for all your correspondence needs",
+  "version": "1.0.0",
+  "author": {
+    "name": "Facgure",
+    "email": "support@facgure.com"
+  },
+  "category": "communication",
+  "icon": "faEnvelope",
+  "color": "#002b41",
+  "permissions": ["read:user"],
+  "entryPoint": "/apps/email-client/index.tsx",
+  "translations": {
+    "th": {
+      "name": "ไคลเอนต์อีเมล",
+      "description": "ไคลเอนต์อีเมลแบบบูรณาการสำหรับความต้องการในการติดต่อทั้งหมดของคุณ"
+    }
+  },
+  "lastUpdated": "2023-08-22"
+}

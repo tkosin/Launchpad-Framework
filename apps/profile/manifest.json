@@ -1,0 +1,23 @@
+{
+  "id": 3,
+  "name": "Profile",
+  "description": "User profile and account management",
+  "version": "1.0.0",
+  "author": {
+    "name": "Facgure",
+    "email": "support@facgure.com"
+  },
+  "category": "utilities",
+  "icon": "faUser",
+  "color": "#002b41",
+  "permissions": ["read:user", "write:user"],
+  "entryPoint": "/apps/profile/index.tsx",
+  "isSystem": true,
+  "translations": {
+    "th": {
+      "name": "โปรไฟล์",
+      "description": "การจัดการโปรไฟล์และบัญชีผู้ใช้"
+    }
+  },
+  "lastUpdated": "2023-12-15"
+}

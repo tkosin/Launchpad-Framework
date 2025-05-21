@@ -1,0 +1,23 @@
+{
+  "id": 11,
+  "name": "Energy Optimizer",
+  "description": "AI-powered tool to optimize energy usage and reduce costs",
+  "version": "1.0.0",
+  "author": {
+    "name": "Facgure",
+    "email": "support@facgure.com"
+  },
+  "category": "utilities",
+  "icon": "faBolt",
+  "color": "#002b41",
+  "permissions": ["read:documents"],
+  "entryPoint": "/apps/energy-optimizer/index.tsx",
+  "requiredFeatures": ["ai-processing"],
+  "translations": {
+    "th": {
+      "name": "ตัวปรับพลังงาน",
+      "description": "เครื่องมือที่ขับเคลื่อนด้วย AI เพื่อปรับการใช้พลังงานและลดต้นทุน"
+    }
+  },
+  "lastUpdated": "2023-10-30"
+}

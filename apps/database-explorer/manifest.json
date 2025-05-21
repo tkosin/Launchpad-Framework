@@ -1,0 +1,22 @@
+{
+  "id": 12,
+  "name": "Database Explorer",
+  "description": "Access and query energy databases with an intuitive interface",
+  "version": "1.0.0",
+  "author": {
+    "name": "Facgure",
+    "email": "support@facgure.com"
+  },
+  "category": "productivity",
+  "icon": "faDatabase",
+  "color": "#002b41",
+  "permissions": ["read:documents", "read:finance"],
+  "entryPoint": "/apps/database-explorer/index.tsx",
+  "translations": {
+    "th": {
+      "name": "ตัวสำรวจฐานข้อมูล",
+      "description": "เข้าถึงและสืบค้นฐานข้อมูลพลังงานด้วยอินเทอร์เฟซที่ใช้งานง่าย"
+    }
+  },
+  "lastUpdated": "2023-09-05"
+}

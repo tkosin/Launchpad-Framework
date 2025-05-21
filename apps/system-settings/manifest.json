@@ -1,0 +1,23 @@
+{
+  "id": 10,
+  "name": "System Settings",
+  "description": "Configure system settings and preferences",
+  "version": "1.0.0",
+  "author": {
+    "name": "Facgure",
+    "email": "support@facgure.com"
+  },
+  "category": "utilities",
+  "icon": "faGear",
+  "color": "#002b41",
+  "permissions": ["admin"],
+  "entryPoint": "/apps/system-settings/index.tsx",
+  "isSystem": true,
+  "translations": {
+    "th": {
+      "name": "การตั้งค่าระบบ",
+      "description": "กำหนดค่าการตั้งค่าและการกำหนดค่าระบบ"
+    }
+  },
+  "lastUpdated": "2023-12-01"
+}

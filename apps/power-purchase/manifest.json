@@ -1,0 +1,23 @@
+{
+  "id": 4,
+  "name": "Power Purchase",
+  "description": "Power purchase agreements and notifications",
+  "version": "1.0.0",
+  "author": {
+    "name": "Facgure",
+    "email": "support@facgure.com"
+  },
+  "category": "finance",
+  "icon": "faBell",
+  "color": "#002b41",
+  "permissions": ["read:documents", "read:finance"],
+  "entryPoint": "/apps/power-purchase/index.tsx",
+  "isSystem": true,
+  "translations": {
+    "th": {
+      "name": "การซื้อขายไฟฟ้า",
+      "description": "ข้อตกลงและการแจ้งเตือนเกี่ยวกับการซื้อขายไฟฟ้า"
+    }
+  },
+  "lastUpdated": "2023-12-15"
+}

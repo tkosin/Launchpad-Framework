@@ -1,0 +1,22 @@
+{
+  "id": 6,
+  "name": "Calendar",
+  "description": "Schedule meetings and manage events related to energy projects",
+  "version": "1.0.0",
+  "author": {
+    "name": "Facgure",
+    "email": "support@facgure.com"
+  },
+  "category": "productivity",
+  "icon": "faCalendar",
+  "color": "#002b41",
+  "permissions": ["read:user"],
+  "entryPoint": "/apps/calendar/index.tsx",
+  "translations": {
+    "th": {
+      "name": "ปฏิทิน",
+      "description": "จัดตารางการประชุมและจัดการกิจกรรมที่เกี่ยวข้องกับโครงการพลังงาน"
+    }
+  },
+  "lastUpdated": "2023-10-05"
+}

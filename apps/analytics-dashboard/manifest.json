@@ -1,0 +1,22 @@
+{
+  "id": 5,
+  "name": "Analytics Dashboard",
+  "description": "Comprehensive analytics and reporting dashboard for energy consumption and production",
+  "version": "1.0.0",
+  "author": {
+    "name": "Facgure",
+    "email": "support@facgure.com"
+  },
+  "category": "productivity",
+  "icon": "faChartColumn",
+  "color": "#002b41",
+  "permissions": ["read:documents"],
+  "entryPoint": "/apps/analytics-dashboard/index.tsx",
+  "translations": {
+    "th": {
+      "name": "แดชบอร์ดวิเคราะห์",
+      "description": "แดชบอร์ดการวิเคราะห์และรายงานที่ครอบคลุมสำหรับการใช้และการผลิตพลังงาน"
+    }
+  },
+  "lastUpdated": "2023-11-20"
+}

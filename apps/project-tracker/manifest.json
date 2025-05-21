@@ -1,0 +1,22 @@
+{
+  "id": 14,
+  "name": "Project Tracker",
+  "description": "Track progress of energy projects and initiatives",
+  "version": "1.0.0",
+  "author": {
+    "name": "Facgure",
+    "email": "support@facgure.com"
+  },
+  "category": "productivity",
+  "icon": "faBriefcase",
+  "color": "#002b41",
+  "permissions": ["read:documents", "write:documents"],
+  "entryPoint": "/apps/project-tracker/index.tsx",
+  "translations": {
+    "th": {
+      "name": "ติดตามโครงการ",
+      "description": "ติดตามความคืบหน้าของโครงการและความคิดริเริ่มด้านพลังงาน"
+    }
+  },
+  "lastUpdated": "2023-10-20"
+}

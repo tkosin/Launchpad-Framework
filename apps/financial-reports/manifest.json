@@ -1,0 +1,22 @@
+{
+  "id": 15,
+  "name": "Financial Reports",
+  "description": "Generate and analyze financial reports for energy investments",
+  "version": "1.0.0",
+  "author": {
+    "name": "Facgure",
+    "email": "support@facgure.com"
+  },
+  "category": "finance",
+  "icon": "faChartPie",
+  "color": "#002b41",
+  "permissions": ["read:finance"],
+  "entryPoint": "/apps/financial-reports/index.tsx",
+  "translations": {
+    "th": {
+      "name": "รายงานทางการเงิน",
+      "description": "สร้างและวิเคราะห์รายงานทางการเงินสำหรับการลงทุนด้านพลังงาน"
+    }
+  },
+  "lastUpdated": "2023-09-25"
+}
