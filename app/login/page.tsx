@@ -27,6 +27,15 @@ export default function LoginPage() {
   const { t, language } = useLanguage()
   const router = useRouter()
 
+  // Log page load for debugging
+  useEffect(() => {
+    console.log("Login page loaded", {
+      timestamp: new Date().toISOString(),
+      url: typeof window !== "undefined" ? window.location.href : null,
+      language,
+    })
+  }, [language])
+
   // Redirect if already authenticated
   useEffect(() => {
     if (isAuthenticated) {
@@ -39,16 +48,24 @@ export default function LoginPage() {
     setError("")
     setIsLoggingIn(true)
 
+    console.log("Login form submitted", { email, timestamp: new Date().toISOString() })
+
     try {
       const success = await login(email, password)
+      console.log("Login result:", success)
+
       if (success) {
+        console.log("Login successful, redirecting to dashboard")
         router.push("/")
       } else {
-        setError(language === "en" ? "Invalid email or password" : "อีเมลหรือรหัสผ่านไม่ถูกต้อง")
+        const errorMessage = language === "en" ? "Invalid email or password" : "อีเมลหรือรหัสผ่านไม่ถูกต้อง"
+        console.log("Login failed:", errorMessage)
+        setError(errorMessage)
       }
     } catch (err) {
       console.error("Login error:", err)
-      setError(language === "en" ? "An error occurred. Please try again." : "เกิดข้อผิดพลาด โปรดลองอีกครั้ง")
+      const errorMessage = language === "en" ? "An error occurred. Please try again." : "เกิดข้อผิดพลาด โปรดลองอีกครั้ง"
+      setError(errorMessage)
     } finally {
       setIsLoggingIn(false)
     }
@@ -105,11 +122,15 @@ export default function LoginPage() {
     setError("")
     setIsLoggingIn(true)
 
+    console.log("Demo account login attempt", { email, timestamp: new Date().toISOString() })
+
     try {
       // For demo accounts, allow login regardless of domain
       const isDemoAccount =
         (email === "admin@facgure.com" && password === "admin123") ||
         (email === "user@facgure.com" && password === "user123")
+
+      console.log("Is demo account:", isDemoAccount)
 
       // Add a small delay to ensure localStorage updates properly
       if (isDemoAccount) {
@@ -117,10 +138,15 @@ export default function LoginPage() {
       }
 
       const success = await login(email, password)
+      console.log("Demo login result:", success)
+
       if (success) {
+        console.log("Demo login successful, redirecting to dashboard")
         router.push("/")
       } else {
-        setError(language === "en" ? "Invalid email or password" : "อีเมลหรือรหัสผ่านไม่ถูกต้อง")
+        const errorMessage = language === "en" ? "Invalid email or password" : "อีเมลหรือรหัสผ่านไม่ถูกต้อง"
+        console.log("Demo login failed:", errorMessage)
+        setError(errorMessage)
       }
     } catch (err) {
       console.error("Login error:", err)
@@ -129,18 +155,6 @@ export default function LoginPage() {
       setIsLoggingIn(false)
     }
   }
-
-  // Fallback logo as inline SVG
-  const fallbackLogo = (
-    <div className="h-10 flex items-center">
-      <svg width="120" height="40" viewBox="0 0 120 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M10 8H110V32H10V8Z" fill="#002b41" />
-        <text x="60" y="24" fontFamily="Arial" fontSize="16" fill="white" textAnchor="middle">
-          Facgure
-        </text>
-      </svg>
-    </div>
-  )
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
@@ -224,6 +238,11 @@ export default function LoginPage() {
                 type="submit"
                 className="w-full py-2 px-4 bg-facgure-blue text-white rounded-md hover:bg-opacity-90 focus:outline-none focus:ring-2 focus:ring-facgure-blue focus:ring-offset-2 transition-colors disabled:opacity-50"
                 disabled={isLoggingIn}
+                onClick={() => {
+                  if (!isLoggingIn) {
+                    console.log("Sign In button clicked")
+                  }
+                }}
               >
                 {isLoggingIn ? (
                   <FontAwesomeIcon icon={faSpinner} className="animate-spin h-5 w-5 mx-auto" />

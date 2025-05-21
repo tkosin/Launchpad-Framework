@@ -43,7 +43,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         // For now, we'll just check localStorage
         const storedUser = localStorage.getItem("user")
         if (storedUser) {
-          setUser(JSON.parse(storedUser))
+          const parsedUser = JSON.parse(storedUser)
+          setUser(parsedUser)
         }
       } catch (error) {
         console.error("Authentication error:", error)
@@ -62,11 +63,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const login = async (email: string, password: string): Promise<boolean> => {
     setIsLoading(true)
     try {
+      console.log("Login attempt:", { email, timestamp: new Date().toISOString() })
+
       // Simplified login logic for demo purposes
       let mockUser: User | null = null
 
       // Check if we're on the Vercel deployment
       const isVercelDeployment = typeof window !== "undefined" && window.location.hostname.includes("vercel.app")
+      console.log("Is Vercel deployment:", isVercelDeployment)
 
       // Check for admin credentials
       if (email === "admin@facgure.com" && password === "admin123") {
@@ -103,22 +107,34 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             company: "Demo Company",
           }
         } else {
+          console.log("Login failed: Invalid email format")
           return false
         }
       } else {
+        console.log("Login failed: Invalid credentials")
         return false
       }
 
       if (mockUser) {
+        console.log("Login successful, setting user:", mockUser.email)
+
+        try {
+          localStorage.setItem("user", JSON.stringify(mockUser))
+          console.log("User data saved to localStorage")
+        } catch (storageError) {
+          console.error("Error saving to localStorage:", storageError)
+        }
+
         setUser(mockUser)
-        localStorage.setItem("user", JSON.stringify(mockUser))
 
         // Add a small delay to ensure localStorage is updated
-        await new Promise((resolve) => setTimeout(resolve, 300))
+        await new Promise((resolve) => setTimeout(resolve, 500))
 
+        console.log("Login process completed successfully")
         return true
       }
 
+      console.log("Login failed: No matching user")
       return false
     } catch (error) {
       console.error("Login error:", error)
@@ -149,7 +165,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       localStorage.setItem("user", JSON.stringify(mockUser))
 
       // Add a small delay to ensure localStorage is updated
-      await new Promise((resolve) => setTimeout(resolve, 300))
+      await new Promise((resolve) => setTimeout(resolve, 500))
 
       return true
     } catch (error) {
@@ -181,7 +197,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       localStorage.setItem("user", JSON.stringify(mockUser))
 
       // Add a small delay to ensure localStorage is updated
-      await new Promise((resolve) => setTimeout(resolve, 300))
+      await new Promise((resolve) => setTimeout(resolve, 500))
 
       return true
     } catch (error) {
