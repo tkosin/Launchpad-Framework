@@ -46,6 +46,7 @@ export default function LoginPage() {
         setError(language === "en" ? "Invalid email or password" : "อีเมลหรือรหัสผ่านไม่ถูกต้อง")
       }
     } catch (err) {
+      console.error("Login error:", err)
       setError(language === "en" ? "An error occurred. Please try again." : "เกิดข้อผิดพลาด โปรดลองอีกครั้ง")
     } finally {
       setIsLoggingIn(false)
@@ -64,6 +65,7 @@ export default function LoginPage() {
         setError(language === "en" ? "Google login failed" : "การเข้าสู่ระบบด้วย Google ล้มเหลว")
       }
     } catch (err) {
+      console.error("Google login error:", err)
       setError(language === "en" ? "An error occurred. Please try again." : "เกิดข้อผิดพลาด โปรดลองอีกครั้ง")
     } finally {
       setIsLoggingIn(false)
@@ -82,6 +84,7 @@ export default function LoginPage() {
         setError(language === "en" ? "Microsoft login failed" : "การเข้าสู่ระบบด้วย Microsoft ล้มเหลว")
       }
     } catch (err) {
+      console.error("Microsoft login error:", err)
       setError(language === "en" ? "An error occurred. Please try again." : "เกิดข้อผิดพลาด โปรดลองอีกครั้ง")
     } finally {
       setIsLoggingIn(false)
@@ -92,7 +95,41 @@ export default function LoginPage() {
     setEmail(demoEmail)
     setPassword(demoPassword)
     setShowDemoAccounts(false)
+
+    // Auto-login with demo account
+    handleLoginWithCredentials(demoEmail, demoPassword)
   }
+
+  const handleLoginWithCredentials = async (email: string, password: string) => {
+    setError("")
+    setIsLoggingIn(true)
+
+    try {
+      const success = await login(email, password)
+      if (success) {
+        router.push("/")
+      } else {
+        setError(language === "en" ? "Invalid email or password" : "อีเมลหรือรหัสผ่านไม่ถูกต้อง")
+      }
+    } catch (err) {
+      console.error("Login error:", err)
+      setError(language === "en" ? "An error occurred. Please try again." : "เกิดข้อผิดพลาด โปรดลองอีกครั้ง")
+    } finally {
+      setIsLoggingIn(false)
+    }
+  }
+
+  // Fallback logo as inline SVG
+  const fallbackLogo = (
+    <div className="h-10 flex items-center">
+      <svg width="120" height="40" viewBox="0 0 120 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M10 8H110V32H10V8Z" fill="#002b41" />
+        <text x="60" y="24" fontFamily="Arial" fontSize="16" fill="white" textAnchor="middle">
+          Facgure
+        </text>
+      </svg>
+    </div>
+  )
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">

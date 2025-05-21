@@ -36,6 +36,14 @@ export function LogoImage({ src, alt, width, height, className, fill = false }: 
       const newSrc = src.startsWith("/") ? `/public${src}` : `/public/${src}`
       setImgSrc(newSrc)
       setErrorCount(2)
+    } else if (errorCount === 2) {
+      // Try with absolute URL for Vercel deployment
+      const hostname = window.location.hostname
+      const protocol = window.location.protocol
+      const baseUrl = `${protocol}//${hostname}`
+      const newSrc = src.startsWith("/") ? `${baseUrl}${src}` : `${baseUrl}/${src}`
+      setImgSrc(newSrc)
+      setErrorCount(3)
     } else {
       // Final fallback - use a data URL for a simple placeholder
       setImgSrc(

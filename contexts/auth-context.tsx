@@ -88,8 +88,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         }
       }
       // Allow any email/password for demo purposes
-      else if (email && password) {
-        // For demo purposes, allow any login with valid email format
+      else if (email && password && password.length >= 4) {
+        // For demo purposes, allow any login with valid email format and password at least 4 chars
         if (email.includes("@")) {
           mockUser = {
             id: `user-${Date.now()}`,
@@ -109,6 +109,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (mockUser) {
         setUser(mockUser)
         localStorage.setItem("user", JSON.stringify(mockUser))
+
+        // Add a small delay to ensure localStorage is updated
+        await new Promise((resolve) => setTimeout(resolve, 100))
+
         return true
       }
 

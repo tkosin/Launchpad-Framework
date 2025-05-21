@@ -234,6 +234,25 @@ export default function Dashboard() {
     window.location.reload()
   }
 
+  // Fallback logo as inline SVG
+  const fallbackLogo = (
+    <div className="h-10 flex items-center">
+      <svg width="120" height="40" viewBox="0 0 120 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M10 8H110V32H10V8Z" fill="#ffffff" />
+        <text
+          x="60"
+          y="24"
+          fontFamily="Arial"
+          fontSize="16"
+          fill={textColorClass === "text-white" ? "#002b41" : "#ffffff"}
+          textAnchor="middle"
+        >
+          Facgure
+        </text>
+      </svg>
+    </div>
+  )
+
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
       {/* Header with dynamic color */}
