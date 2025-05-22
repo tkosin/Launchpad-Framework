@@ -96,6 +96,18 @@
   .font-th {
     font-family: "Noto Sans Thai", "Sarabun", system-ui, sans-serif;
   }
+
+  /* Chatbot widget styles */
+  body.chatbot-open .chatbot-adjustable-content {
+    width: calc(100% - 450px);
+    transition: width 0.3s ease-in-out;
+  }
+
+  @media (max-width: 1024px) {
+    body.chatbot-open .chatbot-adjustable-content {
+      width: 100%;
+    }
+  }
 }
 
 @layer components {

@@ -14,6 +14,8 @@ import { LogoImage } from "@/components/logo-image"
 import type { AppWithIcon } from "@/types/app-manifest"
 import type { AppType } from "@/types/app-manifest"
 import { useRouter } from "next/navigation"
+// Import the ChatbotWidget at the top of the file
+import { ChatbotWidget } from "@/components/chatbot-widget"
 
 export default function Dashboard() {
   const { t, language, setLanguage } = useLanguage()
@@ -369,8 +371,8 @@ export default function Dashboard() {
         </div>
       </header>
 
-      {/* Main Content */}
-      <main className="flex-1 max-w-7xl mx-auto w-full px-4 py-6">
+      {/* Main Content - Add chatbot-adjustable-content class */}
+      <main className="flex-1 max-w-7xl mx-auto w-full px-4 py-6 chatbot-adjustable-content transition-all duration-300">
         {/* Menu Icons */}
         <div className="mb-6">
           <div className="flex justify-end items-center mb-4">
@@ -473,6 +475,9 @@ export default function Dashboard() {
         language={language}
         t={t}
       />
+
+      {/* Add the ChatbotWidget */}
+      <ChatbotWidget />
     </div>
   )
 }
