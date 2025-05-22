@@ -18,6 +18,10 @@ const nextConfig = {
     })
     return config
   },
+  // Set the output directory to "dist" instead of the default ".next"
+  distDir: 'dist',
+  // Ensure output is properly configured for Vercel
+  output: 'export',
 }
 
 export default nextConfig
