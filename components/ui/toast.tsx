@@ -1,10 +1,16 @@
 "use client"
 
+import { useEffect, useState } from "react"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faCheck, faXmark, faInfoCircle, faExclamationTriangle } from "@fortawesome/free-solid-svg-icons"
-import { useState, useEffect } from "react"
+import {
+  faCheckCircle,
+  faExclamationTriangle,
+  faInfoCircle,
+  faTimesCircle,
+  faXmark,
+} from "@fortawesome/free-solid-svg-icons"
 
-export type ToastType = "success" | "error" | "info" | "warning"
+export type ToastType = "success" | "error" | "warning" | "info"
 
 export interface ToastProps {
   id: string
@@ -15,107 +21,66 @@ export interface ToastProps {
   onClose: (id: string) => void
 }
 
+const toastIcons = {
+  success: faCheckCircle,
+  error: faTimesCircle,
+  warning: faExclamationTriangle,
+  info: faInfoCircle,
+}
+
+const toastColors = {
+  success: "border-green-500 bg-green-50 text-green-800",
+  error: "border-red-500 bg-red-50 text-red-800",
+  warning: "border-yellow-500 bg-yellow-50 text-yellow-800",
+  info: "border-blue-500 bg-blue-50 text-blue-800",
+}
+
+const iconColors = {
+  success: "text-green-500",
+  error: "text-red-500",
+  warning: "text-yellow-500",
+  info: "text-blue-500",
+}
+
 export function Toast({ id, type, title, message, duration = 5000, onClose }: ToastProps) {
   const [isVisible, setIsVisible] = useState(true)
-  const [progress, setProgress] = useState(100)
+  const [isExiting, setIsExiting] = useState(false)
 
   useEffect(() => {
-    const startTime = Date.now()
-    const endTime = startTime + duration
+    const timer = setTimeout(() => {
+      handleClose()
+    }, duration)
 
-    const timer = setInterval(() => {
-      const now = Date.now()
-      const remaining = endTime - now
-      const newProgress = (remaining / duration) * 100
+    return () => clearTimeout(timer)
+  }, [duration])
 
-      if (remaining <= 0) {
-        clearInterval(timer)
-        setIsVisible(false)
-        setTimeout(() => onClose(id), 300) // Allow time for exit animation
-      } else {
-        setProgress(newProgress)
-      }
-    }, 100)
-
-    return () => clearInterval(timer)
-  }, [id, duration, onClose])
-
-  const getToastStyles = () => {
-    switch (type) {
-      case "success":
-        return {
-          icon: faCheck,
-          bgColor: "bg-green-600",
-          borderColor: "border-green-600",
-          textColor: "text-green-700",
-          progressColor: "bg-green-600",
-        }
-      case "error":
-        return {
-          icon: faXmark,
-          bgColor: "bg-red-500",
-          borderColor: "border-red-600",
-          textColor: "text-red-700",
-          progressColor: "bg-red-600",
-        }
-      case "warning":
-        return {
-          icon: faExclamationTriangle,
-          bgColor: "bg-amber-500",
-          borderColor: "border-amber-600",
-          textColor: "text-amber-700",
-          progressColor: "bg-amber-600",
-        }
-      case "info":
-      default:
-        return {
-          icon: faInfoCircle,
-          bgColor: "bg-facgure-blue",
-          borderColor: "border-facgure-blue",
-          textColor: "text-facgure-blue",
-          progressColor: "bg-facgure-blue",
-        }
-    }
+  const handleClose = () => {
+    setIsExiting(true)
+    setTimeout(() => {
+      setIsVisible(false)
+      onClose(id)
+    }, 300) // Animation duration
   }
 
-  const styles = getToastStyles()
+  if (!isVisible) return null
 
   return (
     <div
-      className={`max-w-sm w-full bg-white shadow-lg rounded-lg pointer-events-auto border-l-4 ${styles.borderColor} overflow-hidden transition-all duration-300 ${
-        isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"
-      }`}
+      className={`
+        relative p-4 rounded-lg border-l-4 shadow-lg transition-all duration-300 ease-in-out
+        ${toastColors[type]}
+        ${isExiting ? "opacity-0 transform translate-x-full" : "opacity-100 transform translate-x-0"}
+      `}
     >
-      <div className="p-4 relative">
-        <div className="flex items-start">
-          <div className={`flex-shrink-0 ${styles.bgColor} rounded-full p-1`}>
-            <FontAwesomeIcon icon={styles.icon} className="h-3 w-3 text-white" />
-          </div>
-          <div className="ml-3 flex-1 pt-0.5">
-            <p className="text-sm font-medium text-gray-900">{title}</p>
-            {message && <p className="mt-1 text-sm text-gray-500 break-words">{message}</p>}
-          </div>
-          <div className="ml-4 flex-shrink-0 flex">
-            <button
-              className="bg-white rounded-md inline-flex text-gray-400 hover:text-gray-500 focus:outline-none"
-              onClick={() => {
-                setIsVisible(false)
-                setTimeout(() => onClose(id), 300)
-              }}
-            >
-              <span className="sr-only">Close</span>
-              <FontAwesomeIcon icon={faXmark} className="h-4 w-4" />
-            </button>
-          </div>
+      <div className="flex items-start gap-3">
+        <FontAwesomeIcon icon={toastIcons[type]} className={`w-5 h-5 mt-0.5 flex-shrink-0 ${iconColors[type]}`} />
+        <div className="flex-1 min-w-0">
+          <p className="font-medium text-sm">{title}</p>
+          {message && <p className="text-sm mt-1 opacity-90">{message}</p>}
         </div>
-
-        {/* Progress bar */}
-        <div className="h-1 w-full bg-gray-200 absolute bottom-0 left-0">
-          <div
-            className={`h-full ${styles.progressColor} transition-all duration-100 ease-linear`}
-            style={{ width: `${progress}%` }}
-          />
-        </div>
+        <button onClick={handleClose} className="flex-shrink-0 p-1 rounded-full hover:bg-black/10 transition-colors">
+          <FontAwesomeIcon icon={faXmark} className="w-4 h-4 opacity-60" />
+        </button>
       </div>
     </div>
   )
